@@ -25,9 +25,9 @@ export default {
     postId:Number,
     postTitle:String,
     postContent:String,
-    postSendDate:Date,
+    postSendDate:String,
     postSender:Object,
-    postLastRepliedTime:Date,
+    postLastRepliedTime:String,
     postPicUrl:String
   }
 }
