@@ -1,21 +1,13 @@
 <template>
-  <div class="post-preview">
-    <div class="preview-titlebox">
-      <div class="preview-title">
-          <router-link to="/home">{{postTitle}}</router-link>
-      </div>
-      <div class="preview-sender">{{postSender.userName}}</div>
-    </div>
-    <div class="preview-body">
-      <div class="content-holder">
-        <div class="preview-text">{{postContent}}</div>
-        <div class="preview-pic">
-          <img :src="'https://huahuaxiaomuzhu.oss-cn-beijing.aliyuncs.com'+postPicUrl+'?x-oss-process=image/resize,w_200'">
-        </div>
-      </div>
-      <div class="last-replied-time">
-        {{postLastRepliedTime}}
-      </div>
+  <div class="parent">
+    <div class="div1"><p>{{postLastRepliedTime}}</p> </div>
+    <div class="div2"><p>{{postSender.userName}}</p> </div>
+    <div class="div3"><p>{{postRepliedCount}}</p> </div>
+
+    <div class="div4"><p>{{postTitle}}</p> </div>
+    <div class="div5">
+    <p>{{postContent}}</p>
+      <img :src="this.OssUrl+postPicUrl+'?x-oss-process=image/resize,w_200'">
     </div>
   </div>
 </template>
@@ -30,39 +22,25 @@ export default {
     postSendDate:String,
     postSender:Object,
     postLastRepliedTime:String,
-    postPicUrl:String
+    postPicUrl:String,
+    postRepliedCount:Number
   }
 }
 </script>
 
 <style scoped>
-.post-preview{
-  font-size: 14px;
-  text-align: left;
-  line-height: 150%;
-  box-sizing: border-box;
-  display: block;
-  margin-top: 30px;
-  padding: 20px;
-  border: 0px solid #000;
-  border-left: 6px solid #2196F3;
-  background-color: #ddffff;
+.parent {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
 
-}
-.preview-titlebox{
-  float: top;
-  position: relative;
-}
-.preview-title{
-  float: left;
-}
-.preview-sender{
-  width: 100%;
-  float: right;
-}
-.preview-body{
-  float: bottom;
-  position: relative;
-}
+.div1 { grid-area: 2 / 19 / 3 / 21; }
+.div2 { grid-area: 1 / 19 / 2 / 21; }
+.div3 { grid-area: 1 / 1 / 2 / 3; }
+.div4 { grid-area: 1 / 3 / 2 / 13; }
+.div5 { grid-area: 2 / 3 / 5 / 18; }
 
 </style>

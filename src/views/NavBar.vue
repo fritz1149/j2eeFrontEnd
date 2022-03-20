@@ -1,65 +1,45 @@
 <template>
-  <v-app-bar
-      app
-      color="white"
-      flat
-      rounded
-      class="navBar"
-  >
-    <v-container class="py-0 fill-height">
-      <v-avatar
-          class="mr-10"
-          color="grey darken-1"
-          size="32"
-      ></v-avatar>
-
-      <v-btn
-          v-for="(link,index) in links"
-          :key="link"
-          text
-          x-large
-          @click="go(index)"
-      >
-        {{ link }}
-      </v-btn>
-
-      <v-spacer></v-spacer>
-
-      <v-responsive max-width="260">
-        <v-text-field
-            dense
-            flat
-            hide-details
-            rounded
-            solo-inverted
-        ></v-text-field>
-      </v-responsive>
-    </v-container>
+  <v-app-bar>
+    <v-btn text value="home" to="home" @click="changePart('home')">
+      <v-icon>mdi-home</v-icon>
+      <span>Home</span>
+    </v-btn>
+    <v-spacer></v-spacer>
+    <v-btn text value="message">
+      <v-icon>mdi-message</v-icon>
+      <span>Message</span>
+    </v-btn>
+    <v-btn text value="login" to="login" @click="changePart('login')">
+      <v-icon>mdi-login</v-icon>
+      <span>Login</span>
+    </v-btn>
   </v-app-bar>
 </template>
 
 <script>
 export default {
   name: "NavBar",
-  data: () => ({
-    links: [
-      '首页',
-      '个人空间',
-      '消息',
-      '登出',
-    ],
-  }),
+  data: function (){
+    return{
+      partSelect: "home"
+    }
+  },
+  watch:{
+    partSelect: (val, oldVal) => {
+      console.log(val + " " + oldVal)
+    }
+  },
   methods:{
-    go(index){
-      console.log(index)
+    changePart(part){
+      this.partSelect = part;
     }
   }
 }
 </script>
 
 <style scoped>
-.navBar{
-  font-size: 20px;
-  font-family: "微软雅黑";
+.navbar-btn-right{
+  position: relative;
+  float: right;
 }
 </style>
