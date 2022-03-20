@@ -1,9 +1,7 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-    </div>
-    <router-view/>
+  <div>
+    <NavBar></NavBar>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -28,3 +26,13 @@
   color: #42b983;
 }
 </style>
+<script>
+import NavBar from "@/views/NavBar";
+export default {
+  name: 'App',
+  components: {NavBar},
+  data: () => ({
+    //
+  }),
+};
+</script>
