@@ -1,4 +1,4 @@
-# 2022j2ee
+# j2ee2020
 
 ## Project setup
 ```

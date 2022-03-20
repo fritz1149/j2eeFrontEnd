@@ -1,7 +1,9 @@
 <template>
-  <div class="home">
+  <div className="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <post-preview v-for="(p,i) in $data.posts"  :key="i" :post-sender="p.sender" :post-title="p.title" :post-content="p.content" :post-send-date="p.sendTime" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"  ></post-preview>
+    <post-preview v-for="(p,i) in $data.posts" :key="i" :post-sender="p.sender" :post-title="p.title"
+                  :post-content="p.content" :post-send-date="p.sendTime" :post-pic-url="p.imgUrl"
+                  :post-last-replied-time="p.lastRepliedTime"></post-preview>
   </div>
 </template>
 
@@ -9,29 +11,30 @@
 
 import PostPreview from "@/components/PostPreview";
 import axios from "axios";
+
 export default {
   name: 'Home',
-  data:function (){
+  data: function () {
     return {
-      user:{
-        userName:"huahuaxiaomuzhu"
+      user: {
+        userName: "huahuaxiaomuzhu"
       },
-      posts:[]
+      posts: []
     }
   },
   components: {
     PostPreview
   },
   beforeCreate() {
-    axios.get("http://localhost:4396/section/index",{
-      params:{
-        id:4,
-        pageNum:1,
-        pageSize:10
+    axios.get("http://localhost:4396/section/index", {
+      params: {
+        id: 4,
+        pageNum: 1,
+        pageSize: 10
       }
-    }).then((res)=>{
+    }).then((res) => {
       console.log(res.data.data.list)
-      this.$data.posts=res.data.data.list
+      this.$data.posts = res.data.data.list
     })
   }
 }

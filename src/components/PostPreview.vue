@@ -1,16 +1,16 @@
 <template>
   <div class="post-preview">
     <div class="preview-titlebox">
-        <div class="preview-title">{{postTitle}}</div>
-        <div class="preview-sender">{{postSender.userName}}</div>
+      <div class="preview-title">{{postTitle}}</div>
+      <div class="preview-sender">{{postSender.userName}}</div>
     </div>
     <div class="preview-body">
-        <div class="content-holder">
-          <div class="preview-text">{{postContent}}</div>
-          <div class="preview-pic">
-            <img :src="'https://huahuaxiaomuzhu.oss-cn-beijing.aliyuncs.com'+postPicUrl+'?x-oss-process=image/resize,w_200'">
-          </div>
+      <div class="content-holder">
+        <div class="preview-text">{{postContent}}</div>
+        <div class="preview-pic">
+          <img :src="'https://huahuaxiaomuzhu.oss-cn-beijing.aliyuncs.com'+postPicUrl+'?x-oss-process=image/resize,w_200'">
         </div>
+      </div>
       <div class="last-replied-time">
         {{postLastRepliedTime}}
       </div>
