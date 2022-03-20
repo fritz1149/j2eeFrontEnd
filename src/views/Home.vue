@@ -5,6 +5,7 @@
         <v-row>
           <v-col cols="2">
             <v-sheet rounded="lg">
+
               <v-list color="transparent">
                 <v-list-item
                     link
@@ -58,7 +59,6 @@
 
 <script>
 
-import PostPreview from "@/components/PostPreview";
 import axios from "axios";
 
 export default {
@@ -72,9 +72,9 @@ export default {
     }
   },
   components: {
-    PostPreview
   },
   created() {
+    console.log(localStorage)
     this.getSection();
   },
   methods:{
@@ -89,6 +89,10 @@ export default {
         console.log(res.data.data.list)
         this.$data.posts = res.data.data.list
       })
+    }
+  },computed:{
+    isLogin:function (){
+        return localStorage.getItem('token')===undefined
     }
   }
 }

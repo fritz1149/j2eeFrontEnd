@@ -28,10 +28,13 @@
               <v-text-field
                   v-model="Register.password"
                   label="密码"
+                  type="password"
+
                   placeholder="请输入密码"
                   clearable
                   color="primary"
                   prepend-icon="mdi-lock"
+                  :rules="passwordRules"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -41,16 +44,19 @@
                 style="margin-left: 14%"
             >
               <v-text-field
+
                   v-model="Register.repeatPassword"
                   label="确认密码"
+                  type="password"
                   placeholder="请确认密码"
                   clearable
                   color="primary"
                   prepend-icon="mdi-lock"
+                  :rules="confirmPasswordRules"
               ></v-text-field>
             </v-col>
           </v-row>
-          <button class="realButton" type="button">注册</button>
+          <button class="realButton" type="button" v-on:click="doRegister">注册</button>
           </v-form>
         </form>
       </div>
@@ -64,7 +70,7 @@
                   style="margin-left: 14%"
               >
                 <v-text-field
-                    v-model="Register.userName"
+                    v-model="Login.userName"
                     label="用户名"
                     placeholder="请输入用户名"
                     clearable
@@ -79,7 +85,8 @@
                   style="margin-left: 14%"
               >
                 <v-text-field
-                    v-model="Register.password"
+                    v-model="Login.password"
+                    type="password"
                     label="密码"
                     placeholder="请输入密码"
                     clearable
@@ -88,7 +95,7 @@
                 ></v-text-field>
               </v-col>
             </v-row>
-            <button class="realButton" type="button">登录</button>
+            <button class="realButton" type="button" v-on:click="doLogin">登录</button>
           </v-form>
         </form>
       </div>
@@ -107,15 +114,35 @@
         </div>
       </div>
     </div>
+    <v-snackbar top="top"
+        v-model="snackbar"
+    >
+      {{ notification }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default{
   name:"login",
   data(){
     return{
       right_active:false,
+      snackbar: false,
+      notification:null,
       Login:{
         userName:"",
         password:"",
@@ -124,17 +151,56 @@ export default{
         userName:"",
         password:"",
         repeatPassword:"",
-      }
+      },
+      passwordRules:[
+          v=>!!v||'请填写密码',
+          v=>v.length>=8||'密码过短'
+      ],
+      confirmPasswordRules:[
+          v=>!!v||'密码不能为空',
+          v=>v===this.Register.password||'两次密码不一致'
+      ]
     }
   },
   methods:{
-
+    doLogin:function () {
+      axios.post(this.baseUrl+'/login',{
+        username:this.$data.Login.userName,
+        password:this.$data.Login.password
+      }).then((res)=>{
+        console.log(res)
+        if(res.data.code===200){
+          localStorage.setItem('token',res.data.Authorization)
+          this.$data.notification='欢迎回来我的朋友'
+          this.$data.snackbar=true
+        }else{
+          this.$data.notification='用户名或密码错误'
+          this.$data.snackbar=true
+        }
+      },(err)=>{
+        console.log(err)
+        this.$data.notification='服务器开小差了'
+        this.$data.snackbar=true
+      })
+    },
+    doRegister:function () {
+        axios.post(this.baseUrl+'/register',{
+          username:this.Register.userName,
+          password:this.Register.password
+        }).then((res)=>{
+          if(res.data.status===200){
+            this.$router.push('/')
+          }
+        })
+    }
   },
   mounted(){
   },
   beforeDestroy() {
   },
   destroyed() {
+  },
+  computed:{
   }
 }
 </script>
