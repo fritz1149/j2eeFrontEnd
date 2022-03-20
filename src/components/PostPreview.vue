@@ -1,7 +1,9 @@
 <template>
   <div class="post-preview">
     <div class="preview-titlebox">
-      <div class="preview-title">{{postTitle}}</div>
+      <div class="preview-title">
+          <router-link to="/home">{{postTitle}}</router-link>
+      </div>
       <div class="preview-sender">{{postSender.userName}}</div>
     </div>
     <div class="preview-body">
@@ -35,77 +37,30 @@ export default {
 
 <style scoped>
 .post-preview{
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  font-size: 12px;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  color: #333;
-  line-height: 22px;
-  list-style: none;
-  box-sizing: content-box;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  min-height: 1px;
-  margin-left: 70px;
+  font-size: 14px;
+  text-align: left;
+  line-height: 150%;
+  box-sizing: border-box;
+  display: block;
+  margin-top: 30px;
+  padding: 20px;
+  border: 0px solid #000;
+  border-left: 6px solid #2196F3;
+  background-color: #ddffff;
+
 }
 .preview-titlebox{
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  font-size: 12px;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  color: #333;
-  line-height: 22px;
-  list-style: none;
-  box-sizing: content-box;
-  margin: 0;
-  padding: 0;
-  zoom: 1;
+  float: top;
+  position: relative;
 }
 .preview-title{
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  color: #333;
-  line-height: 22px;
-  list-style: none;
-  box-sizing: content-box;
-  margin: 0;
-  padding: 0;
-  float: left!important;
-  width: 420px;
-  font-size: 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  float: left;
 }
 .preview-sender{
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  font-size: 12px;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  line-height: 22px;
-  list-style: none;
-  box-sizing: content-box;
-  margin: 0;
-  padding: 0;
-  float: right!important;
-  width: 165px;
-  color: #999;
+  float: right;
 }
 .preview-body{
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  font-size: 12px;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  color: #333;
-  line-height: 22px;
-  list-style: none;
-  box-sizing: content-box;
-  margin: 0;
-  padding: 0;
-  zoom: 1;
-  padding-top: 3px;
+  float: bottom;
   position: relative;
 }
 
