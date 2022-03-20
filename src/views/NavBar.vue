@@ -1,10 +1,15 @@
 <template>
   <v-app-bar fixed>
-    <v-btn text value="home" to="home" absolute depressed @click="changePart('home')">
+    <v-btn text value="home" to="home" @click="changePart('home')">
       <v-icon>mdi-home</v-icon>
       <span>Home</span>
     </v-btn>
-    <v-btn text value="login" to="login" absolute right @click="changePart('login')">
+    <v-spacer></v-spacer>
+    <v-btn text value="message">
+      <v-icon>mdi-message</v-icon>
+      <span>Message</span>
+    </v-btn>
+    <v-btn text value="login" to="login" @click="changePart('login')">
       <v-icon>mdi-login</v-icon>
       <span>Login</span>
     </v-btn>
@@ -22,7 +27,6 @@ export default {
   watch:{
     partSelect: (val, oldVal) => {
       console.log(val + " " + oldVal)
-      console.log(val == 'login')
     }
   },
   methods:{
@@ -34,4 +38,8 @@ export default {
 </script>
 
 <style scoped>
+.navbar-btn-right{
+  position: relative;
+  float: right;
+}
 </style>
