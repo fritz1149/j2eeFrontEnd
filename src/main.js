@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 
 Vue.config.productionTip = false
-
+Vue.prototype.OssUrl="https://huahuaxiaomuzhu.oss-cn-beijing.aliyuncs.com"
 new Vue({
   router,
   store,
