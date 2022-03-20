@@ -1,13 +1,12 @@
 <template>
-  <v-dialog v-model="display">
-    <p>Login</p>
-  </v-dialog>
+  <div>
+    hello world
+  </div>
 </template>
 
 <script>
 export default {
   name: "Login",
-  props: ["display"],
 }
 </script>
 
