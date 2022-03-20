@@ -57,6 +57,7 @@ export default {
   float: left;
 }
 .preview-sender{
+  width: 100%;
   float: right;
 }
 .preview-body{
