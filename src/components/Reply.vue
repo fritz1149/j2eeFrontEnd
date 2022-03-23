@@ -5,7 +5,7 @@
       <v-col cols="4">
         <v-card height="auto">
           <v-list-item>
-            <v-list-item-avatar><v-img :src="this.OssUrl+this.sender.userAvatar"></v-img></v-list-item-avatar>
+            <v-list-item-avatar><v-img :src="this.OssUrl+reply.sender.userAvatar"></v-img></v-list-item-avatar>
           </v-list-item>
         </v-card>
       </v-col>
@@ -13,8 +13,8 @@
         <v-card height="auto">
           <v-list-item>
             <v-list-item-content >
-              {{this.content}}
-              <v-img :src="this.OssUrl+this.picUrl"></v-img>
+              {{reply.content}}
+              <v-img :src="this.OssUrl+reply.picUrl"></v-img>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -28,12 +28,7 @@
 export default {
   name: "Reply",
   props:{
-    isDataReady:Boolean,
-    replyId:Number,
-    content:String,
-    sendTime:String,
-    sender:Object,
-    picUrl:String
+    reply: Object,
   }
 }
 </script>

@@ -10,13 +10,7 @@
             <v-img v-if="'imgUrl' in post" :src="this.OssUrl+post['imgUrl']" max-height="30%"
                    max-width="50%"></v-img>
           </v-card><br/>
-          <div v-for="(reply, index) in replies" :key="index" style="height: 100%">
-            <v-card min-height="40%">
-              <p>{{reply["content"]}}</p>
-                          <v-img v-if="'imgUrl' in reply" :src="this.OssUrl+reply['imgUrl']" max-height="30%"
-                                 max-width="50%"></v-img>
-            </v-card><br/>
-          </div>
+          <reply v-for="(reply, key) in replies" :key="key" :reply="reply"></reply>
         </v-col>
       </v-row>
     </v-container>
@@ -25,8 +19,10 @@
 
 <script>
 import axios from "axios";
+import Reply from "@/components/Reply";
 export default {
   name: "Post",
+  components: {Reply},
   props: ["id"],
   data: function (){
     return{
@@ -62,7 +58,7 @@ export default {
       let vm = this
       axios.get("http://localhost:4396/reply/getByPostId", {params:{postId: this.id}})
       .then(res=>{
-        if(res["status"] == 200){
+        if(res["status"] == 200 && res["data"]["status"] == 200){
           vm.replies = res["data"]["data"]
           console.log(vm.replies)
         }
