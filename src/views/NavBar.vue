@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar>
+  <v-app-bar class="navbar" dark app>
     <v-btn text value="home" to="home" @click="changePart('home')">
       <v-icon>mdi-home</v-icon>
       <span>Home</span>

@@ -44,7 +44,8 @@
             <v-list>
               <v-list-item v-for="(p,i) in this.postData.list" :key="i">
                 <post-preview :show-section="true" :post-section="p.section"
-                              :post-title="p.title" :post-content="p.content" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"/>
+                              :post-title="p.title" :post-content="p.content" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"
+                              :post-id="p.postId"/>
               </v-list-item>
             </v-list>
             <v-pagination v-model="timeLine.currentPage" :length="postData.pages" v-on:next="nextPage" v-on:previous="prevPage">

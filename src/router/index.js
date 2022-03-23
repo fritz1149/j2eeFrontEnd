@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import LoginWithRegister from "../views/LoginWithRegister";
+import Post from "@/views/Post";
 Vue.use(VueRouter)
 
 const routes = [
@@ -13,6 +14,11 @@ const routes = [
   {
     path:'/login',
     component: LoginWithRegister
+  },
+  {
+    path: '/post',
+    name: 'post',
+    component: Post
   }
 ]
 
