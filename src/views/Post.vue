@@ -29,7 +29,7 @@ export default {
   name: "Post",
   data: function (){
     return{
-      id: null,
+      id: 1,
       post: null,
       replies: [],
     }

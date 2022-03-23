@@ -13,7 +13,8 @@
 
           <v-card-subtitle v-text="'最后回复于'+postLastRepliedTime"/>
         </v-list-item-content>
-        <v-list-item-avatar rounded="rounded-circle" ><v-img :src="this.OssUrl+postSender.userAvatar"></v-img>
+        <v-list-item-avatar size="75" rounded="rounded-circle" ><v-img :src="this.OssUrl+postSender.userAvatar"></v-img>
+
         </v-list-item-avatar>
       </v-list-item>
     </v-card>

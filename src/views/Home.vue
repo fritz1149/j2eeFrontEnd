@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <div class="HomeBackground"></div>
     <v-main>
       <v-container>
         <v-row>
@@ -40,11 +41,12 @@
             </v-sheet>
           </v-col>
 
-          <v-col style="height: 1000px; overflow-y: scroll">
-                <post-preview v-for="(p,i) in this.postData.list" :key="i" :show-section="true" :post-section="p.section"
-                              :post-title="p.title" :post-content="p.content" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"
-                :post-sender="p.sender" :post-id="p.postId"/>
-
+          <v-col cols="8">
+            <div  class="HomePostPreview">
+              <post-preview v-for="(p,i) in this.postData.list" :key="i" :show-section="true" :post-section="p.section"
+                            :post-title="p.title" :post-content="p.content" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"
+                            :post-sender="p.sender" :post-id="p.postId"/>
+            </div>
             <v-pagination v-model="timeLine.currentPage" :length="postData.pages" v-on:next="nextPage" v-on:previous="prevPage">
 
             </v-pagination>
@@ -112,9 +114,37 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="less">
 .home{
-  z-index: 1;
-  background-image: url("../assets/background.bc725153.png") ;
+}
+.HomeBackground{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../assets/background.bc725153.png");
+  background-size: cover;
+  background-position: center;
+}
+.HomePostPreview{
+  height: 1000px;
+  overflow-y: scroll;
+}
+.HomePostPreview::-webkit-scrollbar{
+  width: 10px;
+  height: 1px;
+}
+.HomePostPreview::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background   : #535353;
+}
+.HomePostPreview::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  background   : #ededed;
 }
 </style>
