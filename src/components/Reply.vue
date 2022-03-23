@@ -1,21 +1,23 @@
 <template>
 <div>
-  <v-container>
-    <v-row no-gutters>
-      <v-col cols="4">
-        <v-card height="auto">
+  <v-container >
+    <v-row no-gutters >
+      <v-col cols="2">
+        <v-card height="200">
           <v-list-item>
-            <v-list-item-avatar><v-img :src="this.OssUrl+reply.sender.userAvatar"></v-img></v-list-item-avatar>
+            <v-list-item-avatar height="150" width="150"><v-img :src="this.OssUrl+reply.sender.userAvatar"></v-img></v-list-item-avatar>
           </v-list-item>
         </v-card>
       </v-col>
-      <v-col cols="8">
-        <v-card height="auto">
-          <v-list-item>
-            <v-list-item-content >
+      <v-col cols="10">
+        <v-card height="200">
+          <v-list-item three-line>
               {{reply.content}}
-              <v-img :src="this.OssUrl+reply.picUrl"></v-img>
-            </v-list-item-content>
+              <v-img v-if="reply.picUrl!=='null'" :src="this.OssUrl+reply.picUrl"></v-img>
+            <v-col cols="2" align-self="right">{{reply.sendTime}}</v-col>
+
+
+
           </v-list-item>
         </v-card>
       </v-col>
