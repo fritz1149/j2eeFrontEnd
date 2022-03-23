@@ -39,13 +39,7 @@ export default {
   },
   methods: {
     toPost() {
-      let vm = this
-      this.$router.push({
-        name: 'post',
-        query: {
-          post: JSON.stringify(vm.$props)
-        }
-      })
+      this.$router.push('/post/'+this.postId)
     }
   }
 }

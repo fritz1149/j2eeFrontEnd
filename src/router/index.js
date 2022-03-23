@@ -16,14 +16,15 @@ const routes = [
     component: LoginWithRegister
   },
   {
-    path: '/post',
+    path: '/post/:id',
     name: 'post',
     component: Post,
+    props: true,
   }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })
