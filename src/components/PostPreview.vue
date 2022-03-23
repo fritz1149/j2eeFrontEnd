@@ -3,17 +3,21 @@
     <v-card>
       <v-list-item three-line>
         <v-list-item-content>
-          <v-card-title @click="toPost">{{postTitle}} &nbsp;&nbsp;&nbsp; <v-btn v-if="showSection" v-text="postSection.name"></v-btn> </v-card-title>
+          <v-card-title @click="toPost" class="postPreviewTitle">
+            <p>{{postTitle}}</p> &nbsp;&nbsp;&nbsp;
+            <v-btn v-if="showSection" v-text="postSection.name"></v-btn>
+          </v-card-title>
           <v-card-text v-text="postContent"/>
           <v-img v-if="postPicUrl!=='null'" :src="this.OssUrl+postPicUrl" max-height="300"
                  max-width="500"></v-img>
 
           <v-card-subtitle v-text="'最后回复于'+postLastRepliedTime"/>
         </v-list-item-content>
-        <v-list-item-avatar :rounded="rounded-circle" ><v-img :src="this.OssUrl+postSender.userAvatar"></v-img>
+        <v-list-item-avatar rounded="rounded-circle" ><v-img :src="this.OssUrl+postSender.userAvatar"></v-img>
         </v-list-item-avatar>
       </v-list-item>
     </v-card>
+    <br/>
   </div>
 </template>
 
@@ -37,8 +41,8 @@ export default {
       let vm = this
       this.$router.push({
         name: 'post',
-        params: {
-          post: vm.$props
+        query: {
+          post: JSON.stringify(vm.$props)
         }
       })
     }
@@ -47,5 +51,9 @@ export default {
 </script>
 
 <style scoped>
-
+.postPreviewTitle>p:hover{
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+}
 </style>

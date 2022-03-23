@@ -90,6 +90,7 @@ export default {
         }
       }).then((res) => {
         console.log(res.data.data.list)
+        // console.log(res.data.data)
         this.$data.postData = res.data.data
       })
     },
