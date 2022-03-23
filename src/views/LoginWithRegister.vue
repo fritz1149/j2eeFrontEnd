@@ -173,6 +173,7 @@ export default{
           localStorage.setItem('token',res.data.Authorization)
           this.$data.notification='欢迎回来我的朋友'
           this.$data.snackbar=true
+          this.$router.push('/')
         }else{
           this.$data.notification='用户名或密码错误'
           this.$data.snackbar=true

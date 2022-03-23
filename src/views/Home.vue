@@ -41,25 +41,26 @@
           </v-col>
 
           <v-col>
-            <v-sheet
-                min-height="100vh"
-                rounded="lg"
-            >
-              <!--  -->
-            </v-sheet>
+            <v-list>
+              <v-list-item v-for="(p,i) in this.postData.list" :key="i">
+                <post-preview :show-section="true" :post-section="p.section"
+                              :post-title="p.title" :post-content="p.content" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"/>
+              </v-list-item>
+            </v-list>
+            <v-pagination v-model="timeLine.currentPage" :length="postData.pages" v-on:next="nextPage" v-on:previous="prevPage">
+
+            </v-pagination>
           </v-col>
         </v-row>
       </v-container>
     </v-main>
-<!--    <post-preview v-for="(p,i) in $data.posts" :key="i" :post-sender="p.sender" :post-title="p.title"-->
-<!--                  :post-content="p.content" :post-send-date="p.sendTime" :post-pic-url="p.imgUrl"-->
-<!--                  :post-last-replied-time="p.lastRepliedTime"></post-preview>-->
   </div>
 </template>
 
 <script>
 
 import axios from "axios";
+import PostPreview from "@/components/PostPreview";
 
 export default {
   name: 'Home',
@@ -68,27 +69,42 @@ export default {
       user: {
         userName: "huahuaxiaomuzhu"
       },
-      posts: []
+      postData: {},
+      timeLine:{
+        currentPage:1,
+        pageSize:10
+      }
     }
   },
   components: {
+    PostPreview
   },
   created() {
     console.log(localStorage)
-    this.getSection();
+    this.getTimeLine();
   },
   methods:{
-    getSection:function (){
-      axios.get("http://localhost:4396/section/index", {
+    getTimeLine:function (){
+      axios.get("http://localhost:4396/post/timeline", {
         params: {
-          id: 4,
-          pageNum: 1,
-          pageSize: 10
+          pageNum: this.timeLine.currentPage,
+          pageSize: this.timeLine.pageSize
         }
       }).then((res) => {
         console.log(res.data.data.list)
-        this.$data.posts = res.data.data.list
+        this.$data.postData = res.data.data
       })
+    },
+    nextPage:function (){
+      if(this.postData.hasNextPage){
+        this.getTimeLine();
+      }
+    },
+    prevPage:function () {
+
+      if(this.postData.hasPreviousPage){
+        this.getTimeLine();
+      }
     }
   },computed:{
     isLogin:function (){
