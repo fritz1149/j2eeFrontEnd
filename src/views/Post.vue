@@ -80,13 +80,17 @@ export default {
     },
     loadGroundFloor(){
       console.log(this.post)
-      this.ground_floor = {
-        sender: this.post["sender"],
-        content: this.post["content"],
-        sendTime: this.post["sendTime"],
+      try{
+        this.ground_floor = {
+          sender: this.post["sender"],
+          content: this.post["content"],
+          sendTime: this.post["sendTime"],
+        }
+        if("imgUrl" in this.post)
+          this.ground_floor["picUrl"] = this.post["imgUrl"]
+      }catch (e){
+        throw new Error("load ground floor error")
       }
-      if("imgUrl" in this.post)
-        this.ground_floor["picUrl"] = this.post["imgUrl"]
     },
     getReplies(){
       let vm = this

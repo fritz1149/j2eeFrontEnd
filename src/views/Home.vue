@@ -5,7 +5,7 @@
       <v-container>
         <v-row>
           <v-col cols="2">
-            <v-sheet rounded="lg">
+            <v-sheet rounded="lg" style="position: fixed">
 
               <v-list color="transparent">
                 <v-list-item
@@ -127,10 +127,10 @@ export default {
   background-size: cover;
   background-position: center;
 }
-.HomePostPreview{
-  height: 1000px;
-  overflow-y: scroll;
-}
+//.HomePostPreview{
+//  height: 15%;
+//  overflow-y: scroll;
+//}
 .HomePostPreview::-webkit-scrollbar{
   width: 10px;
   height: 1px;
