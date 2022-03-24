@@ -127,24 +127,5 @@ export default {
   background-size: cover;
   background-position: center;
 }
-.HomePostPreview{
-  height: 1000px;
-  overflow-y: scroll;
-}
-.HomePostPreview::-webkit-scrollbar{
-  width: 10px;
-  height: 1px;
-}
-.HomePostPreview::-webkit-scrollbar-thumb {
-  /*滚动条里面小方块*/
-  border-radius: 10px;
-  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
-  background   : #535353;
-}
-.HomePostPreview::-webkit-scrollbar-track {
-  /*滚动条里面轨道*/
-  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  background   : #ededed;
-}
+
 </style>
