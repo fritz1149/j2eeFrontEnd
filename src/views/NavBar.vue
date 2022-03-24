@@ -1,6 +1,6 @@
 <template>
   <v-app-bar class="navbar" dark app>
-    <v-btn text value="home" to="home" @click="changePart('home')">
+    <v-btn text value="home" to="/home" @click="changePart('home')">
       <v-icon>mdi-home</v-icon>
       <span>Home</span>
     </v-btn>
@@ -9,7 +9,7 @@
       <v-icon>mdi-message</v-icon>
       <span>Message</span>
     </v-btn>
-    <v-btn text value="login" to="login" @click="changePart('login')">
+    <v-btn text value="login" to="/login" @click="changePart('login')">
       <v-icon>mdi-login</v-icon>
       <span>Login</span>
     </v-btn>
