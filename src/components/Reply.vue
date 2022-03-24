@@ -13,7 +13,7 @@
         <v-card height="200">
           <v-list-item three-line>
               {{reply.content}}
-              <v-img v-if="reply.picUrl!=='null'" :src="this.OssUrl+reply.picUrl" max-height="100" :aspect-ratio="1/1"></v-img>
+              <v-img v-if="'picUrl' in reply" :src="this.OssUrl+reply.picUrl" max-height="100" :aspect-ratio="1/1"></v-img>
             <v-col cols="2" align-self="right">{{reply.sendTime}}</v-col>
           </v-list-item>
         </v-card>

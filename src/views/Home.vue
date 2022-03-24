@@ -102,7 +102,6 @@ export default {
       }
     },
     prevPage:function () {
-
       if(this.postData.hasPreviousPage){
         this.getTimeLine();
       }

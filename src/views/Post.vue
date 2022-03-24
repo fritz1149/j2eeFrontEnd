@@ -8,26 +8,21 @@
               <v-list-item>
                 <v-list-item-subtitle>所在版块：</v-list-item-subtitle>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-img :src="OssUrl+post['section']['avatarUrl']" :aspect-ratio="1/1"
+              <v-list-item class="post-section" @click="$router.push('/section/'+section['sectionId'])">
+                <v-list-item-content v-if="'avatarUrl' in section">
+                  <v-img :src="OssUrl+section['avatarUrl']" :aspect-ratio="1/1"
                          max-width="60%" max-height="60%"></v-img>
                 </v-list-item-content>
                 <v-list-item-content>
-                  <v-list-item-title class="post-section-title">{{post["section"]["name"]}}</v-list-item-title>
+                  <v-list-item-title class="post-section-title">{{section["name"]}}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
           </v-card>
         </v-col>
-        <v-col cols="8" v-if="post !== null">
+        <v-col cols="8" v-if="ground_floor && replies">
           <p class="post-title">{{post["title"]}}</p>
           <v-divider/><br/>
-<!--          <v-card min-height="40%">-->
-<!--            <p>{{post["content"]}}</p>-->
-<!--            <v-img v-if="'imgUrl' in post" :src="OssUrl+post['imgUrl']" max-height="30%"-->
-<!--                   max-width="50%"></v-img>-->
-<!--          </v-card><br/>-->
           <reply :reply="ground_floor" v-if="ground_floor"></reply>
           <loading v-else></loading>
           <reply v-for="(reply, key) in replies" :key="key" :reply="reply"></reply>
@@ -51,6 +46,7 @@ export default {
       post: null,
       replies: [],
       ground_floor: null,
+      section: null,
     }
   },
   created() {
@@ -73,6 +69,7 @@ export default {
       .then(res=>{
         if(res["status"] == 200 && res["data"]["status"] == 200){
           vm.post = res["data"]["data"]
+          vm.section = vm.post["section"]
         }
         else
           throw new Error("get post error")
@@ -109,16 +106,13 @@ export default {
 </script>
 
 <style scoped>
-.post-section{
-  display: inline;
-}
 .post-section-describe{
   font-size: small;
 }
 .post-section-title{
   font-size: x-large;
 }
-.post-section-title:hover{
+.post-section:hover .post-section-title{
   color: blue;
   cursor: pointer;
 }
