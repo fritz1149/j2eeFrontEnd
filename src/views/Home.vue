@@ -119,11 +119,11 @@ export default {
       }
     },
     toSection:function (sectionId){
-      this.$router.push('/api/section/'+sectionId)
+      this.$router.push('/section/'+sectionId)
     }
   },computed:{
     isLogin:function (){
-        return this.$store.state.loginState.isLogin
+        return localStorage.getItem('token')!==undefined
     }
   }
 }
