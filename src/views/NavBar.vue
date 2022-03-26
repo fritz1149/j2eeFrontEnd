@@ -17,7 +17,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn icon v-bind="attrs" v-on="on">
           <v-avatar title>
-            <v-img :src="OssUrl+'defaultAvatar.png'"></v-img>
+            <v-img :src="OssUrl+avatar" v-if="avatar" alt="我的图图呢"></v-img>
           </v-avatar>
         </v-btn>
       </template>
@@ -40,6 +40,9 @@ export default {
   computed:{
     isLogin(){
       return this.$store.state.loginState.isLogin;
+    },
+    avatar(){
+      return this.$store.state.userData.userAvatar;
     }
   },
   created() {

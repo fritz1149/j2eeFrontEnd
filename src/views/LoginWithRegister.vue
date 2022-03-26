@@ -205,7 +205,7 @@ export default{
       .then(res=>{
         if(res["status"] == 200 && res["data"]["status"] == 200){
           console.log(res["data"]["data"])
-         this.$store.commit("/userData/saveUserData", res["data"]["data"])
+         this.$store.commit("userData/saveUserData", res["data"]["data"])
         }
         else
           console.log("get userdata false")

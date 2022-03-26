@@ -45,11 +45,14 @@ const router = new VueRouter({
 
 import store from "../store/index.js"
 router.beforeEach((to, from, next) => {
-  store.dispatch("loginState/loadToken").then(res => {
-    //console.log("res= "+res)
-    if (res)
-      store.commit("userData/loadUserData")
-  }).finally(() => {
+  checkToken()
+  async function checkToken(){
+    if(!store.state.loginState.token) {
+      console.log("execute load token program from router (usually after refresh)")
+      let res = await store.dispatch("loginState/loadToken")
+      if(res)
+        store.commit("userData/loadUserData")
+    }
     // store.commit("common/clearSearchInput")
     // if (to.meta.login && !store.state.loginState.isLogin) {
     //   Message.warning("不登陆是不行的 ( ͡° ͜ʖ ͡°)")
@@ -61,8 +64,8 @@ router.beforeEach((to, from, next) => {
     //   next('/home')
     // }
     // else next();
-    next()
-  })
+    await next()
+  }
 
 })
 
