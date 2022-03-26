@@ -37,7 +37,7 @@
           </v-col>
 
           <v-col cols="8">
-            <div  class="HomePostPreview">
+            <div class="HomePostPreview">
               <post-preview v-for="(p,i) in this.postData.list" :key="i" :show-section="true" :post-section="p.section"
                             :post-title="p.title" :post-content="p.content" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"
                             :post-sender="p.sender" :post-id="p.postId"/>
@@ -148,5 +148,7 @@ export default {
   background-size: cover;
   background-position: center;
 }
-
+.HomePostPreview{
+  margin-top: 15px;
+}
 </style>
