@@ -18,7 +18,7 @@ export default {
   },
   components: {SectionPreview},
   created() {
-    axios.get(this.baseUrl+'/section/',{
+    axios.get('/api/section/',{
       params:{
         pageNum:1,
         pageSize:10

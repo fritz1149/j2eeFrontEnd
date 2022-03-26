@@ -54,7 +54,7 @@ export default {
   },
   methods:{
     getSection(){
-      axios.get("http://localhost:4396/section/get", {params:{id: this.id}})
+      axios.get("/api/section/get", {params:{id: this.id}})
       .then(res=>{
         if(res["status"] === 200 && res["data"]["status"] === 200){
           this.section = res["data"]["data"]
@@ -64,7 +64,7 @@ export default {
       })
     },
     getPosts:function (){
-      axios.get("http://localhost:4396/section/index", {
+      axios.get("/api/section/index", {
         params: {
           id: this.id,
           pageNum: this.page.currentPage,

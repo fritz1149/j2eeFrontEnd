@@ -7,7 +7,6 @@ import vuetify from './plugins/vuetify'
 Vue.config.productionTip = false
 Vue.prototype.OssUrl="https://huahuaxiaomuzhu.oss-cn-beijing.aliyuncs.com/"
 Vue.prototype.baseUrl="http://localhost:4396"
-
 new Vue({
   router,
   store,

@@ -23,8 +23,9 @@
                 </v-list-item>
                 <v-divider class="my-2"></v-divider>
                 <v-list-item
-                    v-for="(n,i) in this.sectionData" :key="i">
-                  <v-list-item-content>
+                    v-for="(n,i) in this.sectionData" :key="i"
+                  @click="toSection(n.sectionId)">
+                  <v-list-item-content >
                     <v-list-item-title>
                       <v-avatar><v-img :src="self.OssUrl+n.avatarUrl"></v-img></v-avatar>
                       {{n.name}}
@@ -82,14 +83,13 @@ export default {
   },
   methods:{
     getTimeLine:function (){
-      axios.get("http://localhost:4396/post/timeline", {
+      axios.get("/api/post/timeline", {
         params: {
           pageNum: this.timeLine.currentPage,
           pageSize: this.timeLine.pageSize
         }
       }).then((res) => {
         console.log(res.data.data.list)
-        // console.log(res.data.data)
         this.$data.postData = res.data.data
       })
     },
@@ -105,7 +105,7 @@ export default {
     },
     getSection:function (){
       if(this.isLogin){
-        axios.get(this.baseUrl+'/section/',{
+        axios.get('/api/section/',{
           headers:{
             'Authorization':this.$store.state.loginState.token
           }
@@ -113,10 +113,13 @@ export default {
           this.sectionData=res.data.data
         })
       }else{
-        axios.get(this.baseUrl+'/section/').then((res)=>{
+        axios.get('/api/section/').then((res)=>{
           this.sectionData=res.data.data
         })
       }
+    },
+    toSection:function (sectionId){
+      this.$router.push('/section/'+sectionId)
     }
   },computed:{
     isLogin:function (){
