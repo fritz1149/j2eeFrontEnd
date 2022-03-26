@@ -6,7 +6,10 @@
         <v-row >
           <v-col cols="8" offset="2">
             <section-preview v-if="section" :section-avatar="section['avatarUrl']"
-              :section-name="section['name']" :section-description="section['description']"></section-preview>
+              :section-name="section['name']" :section-description="section['description']"
+              :section-id="section['sectionId']" :subscription.sync="subscription"
+
+            ></section-preview>
             <div v-if="postData">
               <post-preview v-for="(p,i) in this.postData.list" :key="i" :show-section="false" :post-section="p.section"
                             :post-title="p.title" :post-content="p.content" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"
@@ -42,6 +45,7 @@ export default {
         pageSize:10
       },
       section: null,
+      subscription: false,
     }
   },
   components: {
@@ -54,10 +58,15 @@ export default {
   },
   methods:{
     getSection(){
-      axios.get("/api/section/get", {params:{id: this.id}})
+      axios.get("/api/section/get", {
+        params:{id: this.id},
+        headers:{Authorization: this.$store.state.loginState.token}
+      })
       .then(res=>{
         if(res["status"] === 200 && res["data"]["status"] === 200){
           this.section = res["data"]["data"]
+          this.subscription = res["data"]["subscription"]
+          console.log(res)
         }
         else
           throw new Error("get section error")
@@ -85,6 +94,9 @@ export default {
       if(this.postData.hasPreviousPage){
         this.getPosts();
       }
+    },
+    changeSubscription(){
+      this.subscription = !this.subscription;
     }
   },computed:{
     isLogin:function (){

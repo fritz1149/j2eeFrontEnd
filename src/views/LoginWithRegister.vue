@@ -198,9 +198,7 @@ export default{
     },
     getUserData:function(id){
       axios.get("/api/user/get", {
-        params:{
-          id:id
-        }
+        params:{id}
       })
       .then(res=>{
         if(res["status"] == 200 && res["data"]["status"] == 200){

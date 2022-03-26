@@ -49,6 +49,9 @@ export default {
     console.log(this.isLogin)
   },
   methods:{
+    test(){
+      console.log('qwq')
+    }
   }
 }
 </script>
