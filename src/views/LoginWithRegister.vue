@@ -197,11 +197,11 @@ export default{
         })
     },
     getUserData:function(id){
-      axios.get("/api/user/get", {id: id})
+      axios.get("/api/user/get", {params:{id: id}})
       .then(res=>{
         if(res["status"] == 200 && res["data"]["status"] == 200){
           console.log(res["data"]["data"])
-         this.$store.commit("/userData/saveUserData", res["data"]["data"])
+         this.$store.commit("userData/serData/saveUserData", res["data"]["data"])
         }
         else
           console.log("get userdata false")

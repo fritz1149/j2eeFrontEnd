@@ -29,6 +29,8 @@ const loginState={
   actions:{
     loadToken(context){
       return new Promise(resolve=>{
+        if(context.state.token)
+          resolve(true)
         let token=window.localStorage.getItem("token")
         if(token) {
           context.commit("loadToken", token)
