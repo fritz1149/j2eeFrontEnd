@@ -67,7 +67,7 @@ export default {
       let vm = this
       return axios.get("/api/post/get", {params:{id: this.id}})
       .then(res=>{
-        if(res["status"] == 200 && res["data"]["status"] == 200){
+        if(res["status"] === 200 && res["data"]["status"] === 200){
           vm.post = res["data"]["data"]
           vm.section = vm.post["section"]
         }
@@ -93,7 +93,7 @@ export default {
       let vm = this
       axios.get("/api/reply/getByPostId", {params:{postId: this.id}})
       .then(res=>{
-        if(res["status"] == 200 && res["data"]["status"] == 200){
+        if(res["status"] === 200 && res["data"]["status"] === 200){
           vm.replies = res["data"]["data"]
           console.log(vm.replies)
         }
