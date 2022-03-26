@@ -130,7 +130,7 @@ export default {
 
   computed:{
     isLogin:function (){
-        return this.$store.state.loginState.isLogin
+        return localStorage.getItem('token')!==undefined
     }
   }
 }
