@@ -172,6 +172,7 @@ export default{
         if(res.data.code===200){
           this.$store.commit('loginState/saveToken',res.data.Authorization);
           this.$store.commit('loginState/changeLoginState',true);
+          this.getUserData(res.data.id)
           this.$data.notification='欢迎回来我的朋友'
           this.$data.snackbar=true
           this.$router.push('/')
@@ -194,6 +195,17 @@ export default{
             this.$router.push('/')
           }
         })
+    },
+    getUserData:function(id){
+      axios.get("/api/user/get", {id: id})
+      .then(res=>{
+        if(res["status"] == 200 && res["data"]["status"] == 200){
+          console.log(res["data"]["data"])
+         this.$store.commit("/userData/saveUserData", res["data"]["data"])
+        }
+        else
+          console.log("get userdata false")
+      })
     }
   },
   mounted(){

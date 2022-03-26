@@ -27,67 +27,46 @@ const loginState={
     }
   },
   actions:{
-    login(context,form){
-      return axios.post('/login',null,{
-        params:{
-          'password':form.password,
-          'username':form.username
+    loadToken(context){
+      return new Promise(resolve=>{
+        let token=window.localStorage.getItem("token")
+        if(token) {
+          context.commit("loadToken", token)
+          context.commit("changeLoginState", true)
+          resolve(true)
         }
-      }).then(response=>{
-        //console.log(response.data)
-        if(response.data.status===200){
-          context.commit("changeLoginState",true)
-          context.commit("saveToken",response.data.Authorization)
-          console.log("登录成功")
-          return true
-        }
-        else {
-          console.log("登陆失败")
-          return false
-        }
+        resolve(false)
       })
     },
-    // loadToken(context){
-    //   let token=window.localStorage.getItem("token")
-    //   //console.log("loadToken: "+token)
-    //   return axios.get(url,{
-    //     headers:{
-    //       "Authorization":token
-    //     }
-    //   }).then(response=>{
-    //     //console.log("token: "+token+"\nWhoAmI: "+response.data.WhoAmI.userid)
-    //     if(typeof(response.data.WhoAmI)=="object"){
-    //       context.commit("loadToken",token)
-    //       context.commit("changeLoginState",true)
-    //       return true
-    //     }
-    //     else{
-    //       context.commit("changeLoginState",false)
-    //       console.log("token failed")
-    //       return false
-    //     }
-    //   })
-    // },
     logOut(context){
       return new Promise((resolve)=>{
         context.commit("changeLoginState",false)
         context.commit("saveToken","")
         resolve()
       })
+    }
+  }
+}
+
+const userData={
+  namespaced: true,
+  state:{
+    username: null,
+    userid: null,
+    userAvatar: null
+  },
+  mutations:{
+    saveUserData(state,data){
+      state.username=data["userName"]
+      state.userid=data["userId"]
+      state.userAvatar=data["userAvatar"]
+      window.localStorage.setItem("userdata",JSON.stringify(data))
     },
-    register(context,form){
-      return axios.post("/register",null,{
-        params:{
-          'password':form.password,
-          'username':form.username
-        }
-      }).then(response=>{
-        if(response.data.status===200)
-          console.log("注册成功")
-        else
-          console.log("注册失败")
-        return response.data.msg
-      })
+    loadUserData(state){
+      let data=JSON.parse(window.localStorage.getItem("userdata"))
+      state.username=data["userName"]
+      state.userid=data["userId"]
+      state.userAvatar=data["userAvatar"]
     }
   }
 }
@@ -100,6 +79,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    loginState
+    loginState, userData
   }
 })

@@ -43,4 +43,27 @@ const router = new VueRouter({
   routes
 })
 
+import store from "../store/index.js"
+router.beforeEach((to, from, next) => {
+  store.dispatch("loginState/loadToken").then(res => {
+    //console.log("res= "+res)
+    if (res)
+      store.commit("userData/loadUserData")
+  }).finally(() => {
+    // store.commit("common/clearSearchInput")
+    // if (to.meta.login && !store.state.loginState.isLogin) {
+    //   Message.warning("不登陆是不行的 ( ͡° ͜ʖ ͡°)")
+    //   store.commit("loginState/changeAimBeforeLogin",to.path)
+    //   next('/logintest')
+    // }
+    // else if(to.meta.notLogin && store.state.loginState.isLogin){
+    //   Message.warning("已经登陆了")
+    //   next('/home')
+    // }
+    // else next();
+    next()
+  })
+
+})
+
 export default router
