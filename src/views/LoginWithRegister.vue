@@ -164,7 +164,7 @@ export default{
   },
   methods:{
     doLogin:function () {
-      axios.post(this.baseUrl+'/login',{
+      axios.post('/api/login',{
         username:this.$data.Login.userName,
         password:this.$data.Login.password
       }).then((res)=>{
@@ -186,7 +186,7 @@ export default{
       })
     },
     doRegister:function () {
-        axios.post(this.baseUrl+'/register',{
+        axios.post('/api/register',{
           username:this.Register.userName,
           password:this.Register.password
         }).then((res)=>{
