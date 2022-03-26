@@ -1,4 +1,4 @@
-<template>
+ <template>
   <v-list>
     <section-preview v-for="s in sections" :key="s.sectionId" :section-avatar="s.avatarUrl" :section-description="s.description" :section-name="s.name"></section-preview>
 

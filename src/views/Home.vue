@@ -91,12 +91,14 @@ export default {
       }).then((res) => {
         console.log(res.data.data.list)
         this.$data.postData = res.data.data
+        this.toTop();
       })
     },
     nextPage:function (){
       if(this.postData.hasNextPage){
         this.getTimeLine();
       }
+
     },
     prevPage:function () {
       if(this.postData.hasPreviousPage){
@@ -120,8 +122,13 @@ export default {
     },
     toSection:function (sectionId){
       this.$router.push('/section/'+sectionId)
+    },
+    toTop(){
+      this.$vuetify.goTo(0,"easeInOutCubic")
     }
-  },computed:{
+  },
+
+  computed:{
     isLogin:function (){
         return this.$store.state.loginState.isLogin
     }
