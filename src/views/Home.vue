@@ -41,7 +41,7 @@
                             :post-title="p.title" :post-content="p.content" :post-pic-url="p.imgUrl" :post-last-replied-time="p.lastRepliedTime"
                             :post-sender="p.sender" :post-id="p.postId"/>
             </div>
-            <v-pagination v-model="timeLine.currentPage" :length="postData.pages" v-on:next="nextPage" v-on:previous="prevPage">
+            <v-pagination v-model="timeLine.currentPage" :length="postData.pages" v-on:input="getTimeLine" v-on:next="nextPage" v-on:previous="prevPage">
 
             </v-pagination>
           </v-col>
