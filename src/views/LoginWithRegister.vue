@@ -170,7 +170,8 @@ export default{
       }).then((res)=>{
         console.log(res)
         if(res.data.code===200){
-          localStorage.setItem('token',res.data.Authorization)
+          this.$store.commit('loginState/saveToken',res.data.Authorization);
+          this.$store.commit('loginState/changeLoginState',true);
           this.$data.notification='欢迎回来我的朋友'
           this.$data.snackbar=true
           this.$router.push('/')
@@ -407,7 +408,7 @@ export default{
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 0 0px;
+    padding: 0 0;
     text-align: center;
     top: 0;
     height: 100%;

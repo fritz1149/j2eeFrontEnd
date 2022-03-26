@@ -35,7 +35,7 @@ const loginState={
         }
       }).then(response=>{
         //console.log(response.data)
-        if(response.data.status==200){
+        if(response.data.status===200){
           context.commit("changeLoginState",true)
           context.commit("saveToken",response.data.Authorization)
           console.log("登录成功")
@@ -82,7 +82,7 @@ const loginState={
           'username':form.username
         }
       }).then(response=>{
-        if(response.data.msg==200)
+        if(response.data.status===200)
           console.log("注册成功")
         else
           console.log("注册失败")

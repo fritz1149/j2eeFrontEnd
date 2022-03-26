@@ -13,31 +13,25 @@
                     color="grey lighten-4"
                 >
                   <v-list-item-content>
-                    <v-list-item-title>
+                    <v-list-item-title v-if="isLogin">
                       关注的吧
+                    </v-list-item-title>
+                    <v-list-item-title v-else>
+                      大家在看
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
                 <v-divider class="my-2"></v-divider>
                 <v-list-item
-                    v-for="n in 5"
-                    :key="n"
-                    link
-                >
+                    v-for="(n,i) in this.sectionData" :key="i">
                   <v-list-item-content>
                     <v-list-item-title>
-                      <v-avatar
-                          class="mr-10"
-                          color="grey darken-1"
-                          size="32"
-                      ></v-avatar>
-                      List Item {{ n }}
+                      <v-avatar><v-img :src="self.OssUrl+n.avatarUrl"></v-img></v-avatar>
+                      {{n.name}}
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
-
-
-              </v-list>
+                </v-list>
             </v-sheet>
           </v-col>
 
@@ -70,17 +64,20 @@ export default {
         userName: "huahuaxiaomuzhu"
       },
       postData: {},
+      sectionData: [],
       timeLine:{
         currentPage:1,
         pageSize:10
-      }
+      },
+      self:this
     }
   },
   components: {
     PostPreview
+  },beforeMount() {
   },
   created() {
-    console.log(localStorage)
+    this.getSection();
     this.getTimeLine();
   },
   methods:{
@@ -106,10 +103,25 @@ export default {
       if(this.postData.hasPreviousPage){
         this.getTimeLine();
       }
+    },
+    getSection:function (){
+      if(this.isLogin){
+        axios.get(this.baseUrl+'/section/',{
+          headers:{
+            'Authorization':this.$store.state.loginState.token
+          }
+        }).then((res)=>{
+          this.sectionData=res.data.data
+        })
+      }else{
+        axios.get(this.baseUrl+'/section/').then((res)=>{
+          this.sectionData=res.data.data
+        })
+      }
     }
   },computed:{
     isLogin:function (){
-        return localStorage.getItem('token')===undefined
+        return this.$store.state.loginState.isLogin
     }
   }
 }
