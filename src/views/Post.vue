@@ -65,7 +65,7 @@ export default {
   methods:{
     getPost(){
       let vm = this
-      return axios.get("http://localhost:4396/post/get", {params:{id: this.id}})
+      return axios.get("/api/post/get", {params:{id: this.id}})
       .then(res=>{
         if(res["status"] == 200 && res["data"]["status"] == 200){
           vm.post = res["data"]["data"]
@@ -91,7 +91,7 @@ export default {
     },
     getReplies(){
       let vm = this
-      axios.get("http://localhost:4396/reply/getByPostId", {params:{postId: this.id}})
+      axios.get("/api/reply/getByPostId", {params:{postId: this.id}})
       .then(res=>{
         if(res["status"] == 200 && res["data"]["status"] == 200){
           vm.replies = res["data"]["data"]

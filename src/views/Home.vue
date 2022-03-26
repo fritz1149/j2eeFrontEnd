@@ -119,7 +119,7 @@ export default {
       }
     },
     toSection:function (sectionId){
-      this.$router.push('/section/'+sectionId)
+      this.$router.push('/api/section/'+sectionId)
     }
   },computed:{
     isLogin:function (){
