@@ -5,6 +5,7 @@ import LoginWithRegister from "../views/LoginWithRegister";
 import Post from "@/views/Post";
 import PlayGround from "@/views/PlayGround";
 import Section from "@/views/Section";
+import Refresh from "@/views/refresh";
 Vue.use(VueRouter)
 
 const routes = [
@@ -34,6 +35,10 @@ const routes = [
     name:'test',
     component: PlayGround,
     props:true
+  },
+  {
+    path: '/refresh',
+    component: Refresh
   }
 ]
 

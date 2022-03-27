@@ -8,7 +8,7 @@
             <section-preview v-if="section" :section-avatar="section['avatarUrl']"
               :section-name="section['name']" :section-description="section['description']"
               :section-id="section['sectionId']" :subscription.sync="subscription"
-
+              @notLogged="noticeLogin"
             ></section-preview>
             <div v-if="postData">
               <post-preview v-for="(p,i) in this.postData.list" :key="i" :show-section="false" :post-section="p.section"
@@ -22,6 +22,26 @@
         </v-row>
       </v-container>
     </v-main>
+    <v-snackbar v-model="snackbar" top>
+      {{notification}}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            color="green"
+            text
+            v-bind="attrs"
+            to="/login">
+          Log In
+        </v-btn>
+        <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -46,6 +66,8 @@ export default {
       },
       section: null,
       subscription: false,
+      snackbar: false,
+      notification: null,
     }
   },
   components: {
@@ -97,8 +119,14 @@ export default {
     },
     changeSubscription(){
       this.subscription = !this.subscription;
+    },
+    noticeLogin(){
+      this.snackbar = true
+      this.notification = '请登陆后再关注~'
+
     }
-  },computed:{
+  },
+  computed:{
     isLogin:function (){
       return localStorage.getItem('token')===undefined
     }

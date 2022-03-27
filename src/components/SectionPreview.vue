@@ -56,6 +56,7 @@ export default {
         })
       }
       else{
+        this.$emit('notLogged')
         console.log("not logged in")
       }
     }

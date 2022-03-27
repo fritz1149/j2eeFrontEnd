@@ -22,7 +22,7 @@
         </v-btn>
       </template>
       <v-list>
-        <v-list-item @click="$store.dispatch('loginState/logOut')">
+        <v-list-item @click="logout">
           登出
         </v-list-item>
       </v-list>
@@ -51,6 +51,14 @@ export default {
   methods:{
     test(){
       console.log('qwq')
+    },
+    logout(){
+      let vm = this
+      console.log("logout")
+      this.$store.dispatch('loginState/logOut')
+      .then(()=>{
+        vm.$router.push("/refresh")
+      })
     }
   }
 }

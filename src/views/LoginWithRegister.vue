@@ -159,8 +159,15 @@ export default{
       confirmPasswordRules:[
           v=>!!v||'密码不能为空',
           v=>v===this.Register.password||'两次密码不一致'
-      ]
+      ],
+      pathBeforeLogin: null,
     }
+  },
+  beforeRouteEnter(to, from, next){
+    // console.log(from);
+    next(vm => {
+      vm.pathBeforeLogin = from["path"]
+    })
   },
   methods:{
     doLogin:function () {
@@ -175,7 +182,7 @@ export default{
           this.getUserData(res.data.id)
           this.$data.notification='欢迎回来我的朋友'
           this.$data.snackbar=true
-          this.$router.push('/')
+          this.$router.push(this.pathBeforeLogin)
         }else{
           this.$data.notification='用户名或密码错误'
           this.$data.snackbar=true

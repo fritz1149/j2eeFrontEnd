@@ -6,7 +6,7 @@
           <v-card color="rgb(229, 229, 229)" outlined>
             <v-list color="rgb(243, 245, 248)">
               <v-list-item>
-                <v-list-item-subtitle>所在版块：</v-list-item-subtitle>
+                <v-list-item-subtitle>所在贴吧：</v-list-item-subtitle>
               </v-list-item>
               <v-list-item class="post-section" @click="$router.push('/section/'+section['sectionId'])">
                 <v-list-item-content v-if="'avatarUrl' in section">
@@ -26,6 +26,30 @@
           <reply :reply="ground_floor" v-if="ground_floor"></reply>
           <loading v-else></loading>
           <reply v-for="(reply, key) in replies" :key="key" :reply="reply"></reply>
+        </v-col>
+        <v-col cols="2">
+          <v-dialog width="50%">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                  color="blue lighten-2"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+              >
+                <v-icon>mdi-comment-plus</v-icon>
+                &nbsp;写回复
+              </v-btn>
+            </template>
+            <v-card>
+              <v-form v-model="reply.allow">
+                <v-file-input
+                    prepend-icon="mdi-image"
+                ></v-file-input>
+                <v-text-field v-model="reply.text" placeholder="输入你的回复" counter="200">
+                </v-text-field>
+              </v-form>
+            </v-card>
+          </v-dialog>
         </v-col>
       </v-row>
       <loading v-else></loading>
@@ -47,6 +71,11 @@ export default {
       replies: [],
       ground_floor: null,
       section: null,
+      reply:{
+        allow: true,
+        text: '',
+        file: null,
+      }
     }
   },
   created() {
