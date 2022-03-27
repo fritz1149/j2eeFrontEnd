@@ -41,12 +41,17 @@
               </v-btn>
             </template>
             <v-card>
-              <v-form v-model="reply.allow">
-                <v-file-input
-                    prepend-icon="mdi-image"
+              <v-form v-model="reply.allow" ref="replyForm">
+                <v-file-input v-model="reply.file" accept="image/*"
+                    prepend-icon="mdi-image" :rules="imgRule"
                 ></v-file-input>
-                <v-text-field v-model="reply.text" placeholder="输入你的回复" counter="200">
-                </v-text-field>
+                <v-text-field v-model="reply.text" placeholder="输入你的回复"
+                    :counter="textMax" :rules="textRule"
+                ></v-text-field>
+                <v-btn @click="submitReply">
+                  <v-icon>mdi-comment-check</v-icon>
+                  提交
+                </v-btn>
               </v-form>
             </v-card>
           </v-dialog>
@@ -71,11 +76,23 @@ export default {
       replies: [],
       ground_floor: null,
       section: null,
-      reply:{
+      reply: {
         allow: true,
         text: '',
         file: null,
-      }
+      },
+      textMax: 100,
+      imgRule: [
+          v=>{ return v === null || v["type"].search("image") != -1 || "只能上传图片" },
+      ],
+      textRule: [
+          v=>{ return v.length <= this.textMax || "字数太多啦" },
+      ]
+    }
+  },
+  watch:{
+    reply(val){
+      console.log(val)
     }
   },
   created() {
@@ -111,9 +128,8 @@ export default {
           sender: this.post["sender"],
           content: this.post["content"],
           sendTime: this.post["sendTime"],
+          imgUrl: this.post["imgUrl"],
         }
-        if("imgUrl" in this.post)
-          this.ground_floor["picUrl"] = this.post["imgUrl"]
       }catch (e){
         throw new Error("load ground floor error")
       }
@@ -129,6 +145,23 @@ export default {
         else
           throw new Error("get replies error")
       })
+    },
+    submitReply(){
+      let vm = this
+      if(this.$refs["replyForm"].validate()) {
+        let formData = new FormData()
+        formData.append("content", vm.reply["text"])
+        formData.append("postId", vm.id)
+        formData.append("file", vm.reply["file"])
+        axios.post("/api/reply/send", formData, {
+          headers:{
+            Authorization: vm.$store.state.loginState.token
+          }
+        }).then(res=>{
+          vm.$router.push("/refresh")
+
+        })
+      }
     }
   }
 }
