@@ -6,6 +6,7 @@ import Post from "@/views/Post";
 import PlayGround from "@/views/PlayGround";
 import Section from "@/views/Section";
 import Refresh from "@/views/refresh";
+import UserInfo from "@/views/UserInfo";
 Vue.use(VueRouter)
 
 const routes = [
@@ -39,6 +40,10 @@ const routes = [
   {
     path: '/refresh',
     component: Refresh
+  },
+  {
+    path: '/userInfo',
+    component: UserInfo,
   }
 ]
 

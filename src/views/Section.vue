@@ -22,11 +22,10 @@
 
           <v-col cols="2">
             <v-dialog width="50%">
-              <template v-slot:activator="{ on, attrs }">
+              <template v-slot:activator="{on}">
                 <v-btn
                     color="blue lighten-2"
                     dark
-                    v-bind="attrs"
                     v-on="on"
                 >
                   <v-icon>mdi-pencil-plus</v-icon>
@@ -55,26 +54,7 @@
         </v-row>
       </v-container>
     </v-main>
-    <v-snackbar v-model="snackbar" top>
-      {{notification}}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-            color="green"
-            text
-            v-bind="attrs"
-            to="/login">
-          Log In
-        </v-btn>
-        <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <login-notification :display.sync="snackbar" :notification="notification"></login-notification>
   </div>
 </template>
 
@@ -83,6 +63,7 @@
 import axios from "axios";
 import PostPreview from "@/components/PostPreview";
 import SectionPreview from "@/components/SectionPreview";
+import LoginNotification from "@/components/LoginNotification";
 
 export default {
   name: 'Home',
@@ -100,7 +81,7 @@ export default {
       section: null,
       subscription: false,
       snackbar: false,
-      notification: null,
+      notification: '',
       post: {
         allow: true,
         title: '',
@@ -123,6 +104,7 @@ export default {
     }
   },
   components: {
+    LoginNotification,
     SectionPreview,
     PostPreview
   },
@@ -178,6 +160,10 @@ export default {
     },
     submitPost(){
       let vm = this
+      if(!this.$store.state.loginState.isLogin){
+        this.snackbar = true
+        this.notification = '请登陆后再发帖~'
+      }
       if(this.$refs["postForm"].validate()) {
         let formData = new FormData()
         formData.append("title", vm.post["title"])

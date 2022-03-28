@@ -59,6 +59,7 @@
       </v-row>
       <loading v-else></loading>
     </v-container>
+    <login-notification :display.sync="loginNotification" :notification="notification"></login-notification>
   </v-main>
 </template>
 
@@ -66,9 +67,10 @@
 import axios from "axios";
 import Reply from "@/components/Reply";
 import Loading from "@/components/loading";
+import LoginNotification from "@/components/LoginNotification";
 export default {
   name: "Post",
-  components: {Loading, Reply},
+  components: {LoginNotification, Loading, Reply},
   props: ["id"],
   data: function (){
     return{
@@ -76,6 +78,8 @@ export default {
       replies: [],
       ground_floor: null,
       section: null,
+      loginNotification: false,
+      notification: "",
       reply: {
         allow: true,
         text: '',
@@ -149,6 +153,10 @@ export default {
     },
     submitReply(){
       let vm = this
+      if(!this.$store.state.loginState.isLogin){
+        this.loginNotification = true
+        this.notification = "请登陆后再回帖~"
+      }
       if(this.$refs["replyForm"].validate()) {
         let formData = new FormData()
         formData.append("content", vm.reply["text"])
@@ -159,6 +167,7 @@ export default {
             Authorization: vm.$store.state.loginState.token
           }
         }).then(res=>{
+
           vm.$router.push("/refresh")
 
         })
