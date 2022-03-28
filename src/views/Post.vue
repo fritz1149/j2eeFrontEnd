@@ -23,9 +23,9 @@
         <v-col cols="8" v-if="ground_floor && replies">
           <p class="post-title">{{post["title"]}}</p>
           <v-divider/><br/>
-          <reply :reply="ground_floor" v-if="ground_floor"></reply>
+          <reply :reply="ground_floor" :is-reply="false" v-if="ground_floor"></reply>
           <loading v-else></loading>
-          <reply v-for="(reply, key) in replies" :key="key" :reply="reply"></reply>
+          <reply v-for="(reply, key) in replies" :key="key" :reply="reply" :is-reply="true"></reply>
         </v-col>
         <v-col cols="2">
           <v-dialog width="50%">
@@ -86,7 +86,8 @@ export default {
           v=>{ return v === null || v["type"].search("image") != -1 || "只能上传图片" },
       ],
       textRule: [
-          v=>{ return v.length <= this.textMax || "字数太多啦" },
+        v=>{ return v.length <= this.textMax || "字数太多啦" },
+        v=>{ return v.length > 0 || '不能什么都不写哦'}
       ]
     }
   },

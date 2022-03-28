@@ -7,6 +7,9 @@
           <v-list-item>
             <v-list-item-avatar height="150" width="150"><v-img :src="this.OssUrl+reply.sender.userAvatar"></v-img></v-list-item-avatar>
           </v-list-item>
+          <v-list-item>
+            <v-list-item-subtitle>{{reply.sender.userName}}</v-list-item-subtitle>
+          </v-list-item>
         </v-card>
       </v-col>
       <v-col cols="10">
@@ -34,10 +37,11 @@ export default {
   name: "Reply",
   props:{
     reply: Object,
+    isReply: Boolean,
   },
   computed:{
     myReply(){
-      return this.$store.state.loginState.isLogin && this.$store.state.userData.userid == this.reply.senderId
+      return this.isReply && this.$store.state.loginState.isLogin && this.$store.state.userData.userId == this.reply.senderId
     }
   },
   methods:{

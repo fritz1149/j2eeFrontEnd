@@ -53,21 +53,21 @@ const loginState={
 const userData={
   namespaced: true,
   state:{
-    username: null,
-    userid: null,
+    userName: null,
+    userId: null,
     userAvatar: null
   },
   mutations:{
     saveUserData(state,data){
-      state.username=data["userName"]
-      state.userid=data["userId"]
+      state.userName=data["userName"]
+      state.userId=data["userId"]
       state.userAvatar=data["userAvatar"]
       window.localStorage.setItem("userdata",JSON.stringify(data))
     },
     loadUserData(state){
       let data=JSON.parse(window.localStorage.getItem("userdata"))
-      state.username=data["userName"]
-      state.userid=data["userId"]
+      state.userName=data["userName"]
+      state.userId=data["userId"]
       state.userAvatar=data["userAvatar"]
     }
   }
