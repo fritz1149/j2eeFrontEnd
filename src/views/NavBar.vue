@@ -5,7 +5,7 @@
       <span>Home</span>
     </v-btn>
     <v-spacer></v-spacer>
-    <v-btn text value="message">
+    <v-btn text value="message" v-if="isLogin">
       <v-icon>mdi-message</v-icon>
       <span>Message</span>
     </v-btn>

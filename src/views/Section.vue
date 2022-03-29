@@ -3,6 +3,7 @@
     <div></div>
     <v-main>
       <v-container>
+        <v-alert type="error" v-model="alert" dismissible>发帖失败，检查一下网络吧</v-alert>
         <v-row >
           <v-col cols="8" offset="2">
             <section-preview v-if="section" :section-avatar="section['avatarUrl']"
@@ -82,6 +83,7 @@ export default {
       subscription: false,
       snackbar: false,
       notification: '',
+      alert: false,
       post: {
         allow: true,
         title: '',
@@ -176,8 +178,12 @@ export default {
             Authorization: vm.$store.state.loginState.token
           }
         }).then(res=>{
-          vm.$router.push("/refresh")
-
+          if(res["status"] == 200 && res["data"]["status"] == 200) {
+            vm.$router.push("/refresh")
+          }
+          else{
+            this.alert = true
+          }
         })
       }
     }

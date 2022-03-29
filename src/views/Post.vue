@@ -1,6 +1,7 @@
 <template>
   <v-main>
     <v-container>
+      <v-alert type="error" v-model="alert" dismissible>回复失败，检查一下网络吧</v-alert>
       <v-row justify-content="center" v-if="post">
         <v-col cols="2">
           <v-card color="rgb(229, 229, 229)" outlined>
@@ -80,6 +81,7 @@ export default {
       section: null,
       loginNotification: false,
       notification: "",
+      alert: false,
       reply: {
         allow: true,
         text: '',
@@ -167,9 +169,12 @@ export default {
             Authorization: vm.$store.state.loginState.token
           }
         }).then(res=>{
-
-          vm.$router.push("/refresh")
-
+          if(res["status"] == 200 && res["data"]["res"] == 200) {
+            vm.$router.push("/refresh")
+          }
+          else{
+            this.alert = true
+          }
         })
       }
     }

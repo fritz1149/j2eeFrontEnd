@@ -1,6 +1,7 @@
 <template>
   <v-app>
       <NavBar></NavBar>
+      <Message :display="showMessage"></Message>
       <router-view></router-view>
   </v-app>
 </template>
@@ -28,11 +29,12 @@
 </style>
 <script>
 import NavBar from "@/views/NavBar";
+import Message from "@/components/Message";
 export default {
   name: 'App',
-  components: {NavBar},
+  components: {Message, NavBar},
   data: () => ({
-    //
+    showMessage: false,
   }),
 };
 </script>
