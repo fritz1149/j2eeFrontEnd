@@ -1,6 +1,8 @@
 <template>
-  <v-dialog v-model="display">
-    <p>hello world</p>
+  <v-dialog v-model="display" @click:outside="$emit('update:display', false)">
+    <v-card>
+      <p>hello message</p>
+    </v-card>
   </v-dialog>
 </template>
 

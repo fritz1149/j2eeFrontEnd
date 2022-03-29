@@ -1,7 +1,7 @@
 <template>
   <v-app>
-      <NavBar></NavBar>
-      <Message :display="showMessage"></Message>
+      <NavBar :show-message.sync="showMessage"></NavBar>
+      <Message :display.sync="showMessage"></Message>
       <router-view></router-view>
   </v-app>
 </template>
