@@ -21,12 +21,14 @@
             </v-list>
           </v-card>
         </v-col>
-        <v-col cols="8" v-if="ground_floor && replies">
+        <v-col cols="8" v-if="ground_floor && replyData">
           <p class="post-title">{{post["title"]}}</p>
           <v-divider/><br/>
           <reply :reply="ground_floor" :is-reply="false" v-if="ground_floor"></reply>
           <loading v-else></loading>
-          <reply v-for="(reply, key) in replies" :key="key" :reply="reply" :is-reply="true"></reply>
+          <reply v-for="(reply, key) in replyData.list" :key="key" :reply="reply" :is-reply="true"></reply>
+          <v-pagination v-model="replyData.currentPage" :length="replyData.pages" v-on:input="getReplies" v-on:next="nextPage" v-on:previous="prevPage"/>
+
         </v-col>
         <v-col cols="2">
           <v-dialog width="50%">
@@ -76,8 +78,10 @@ export default {
   data: function (){
     return{
       post: null,
-      replies: [],
+      replyData: null,
       ground_floor: null,
+      pageNum:1,
+      pageSize:10,
       section: null,
       loginNotification: false,
       notification: "",
@@ -89,7 +93,7 @@ export default {
       },
       textMax: 100,
       imgRule: [
-          v=>{ return v === null || v["type"].search("image") != -1 || "只能上传图片" },
+          v=>{ return v === null || v["type"].search("image") !== -1 || "只能上传图片" },
       ],
       textRule: [
         v=>{ return v.length <= this.textMax || "字数太多啦" },
@@ -143,15 +147,25 @@ export default {
     },
     getReplies(){
       let vm = this
-      axios.get("/api/reply/getByPostId", {params:{postId: this.id}})
+      axios.get("/api/reply/getByPostId", {params:{postId: this.id,pageNum:this.pageNum,pageSize:this.pageSize}})
       .then(res=>{
         if(res["status"] === 200 && res["data"]["status"] === 200){
-          vm.replies = res["data"]["data"]
-          console.log(vm.replies)
+          vm.replyData = res["data"]["data"]
+          console.log(vm.replyData)
         }
         else
           throw new Error("get replies error")
       })
+    },
+    nextPage:function (){
+      if(this.replyData.hasNextPage){
+        this.getReplies();
+      }
+    },
+    prevPage:function () {
+      if(this.replyData.hasPreviousPage){
+        this.getReplies();
+      }
     },
     submitReply(){
       let vm = this
@@ -169,7 +183,7 @@ export default {
             Authorization: vm.$store.state.loginState.token
           }
         }).then(res=>{
-          if(res["status"] == 200 && res["data"]["res"] == 200) {
+          if(res["status"] === 200 && res["data"]["status"] === 200) {
             vm.$router.push("/refresh")
           }
           else{

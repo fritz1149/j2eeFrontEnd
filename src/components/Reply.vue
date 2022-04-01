@@ -21,8 +21,10 @@
           </v-list-item>
           <v-list-item>
             <v-spacer></v-spacer>
-            <v-btn text right v-if="myReply" @click="deleteReply">删除</v-btn>
+              <v-text-field v-if="isReply" v-model:value="innerReply"></v-text-field><v-btn v-if="isReply" @click="sendInnerReply" >回复</v-btn>
           </v-list-item>
+          <v-btn text right v-if="myReply" @click="deleteReply">删除</v-btn>
+
         </v-card>
       </v-col>
     </v-row>
@@ -39,9 +41,15 @@ export default {
     reply: Object,
     isReply: Boolean,
   },
+  data:function (){
+    return {
+      innerReply:null,
+      replyTo:null,
+    }
+  },
   computed:{
     myReply(){
-      return this.isReply && this.$store.state.loginState.isLogin && this.$store.state.userData.userId == this.reply.senderId
+      return this.isReply && this.$store.state.loginState.isLogin && this.$store.state.userData.userId === this.reply.senderId
     }
   },
   methods:{
@@ -52,6 +60,19 @@ export default {
       }).then(res=>{
         console.log(res)
         this.$router.push("/refresh")
+      })
+    },
+    sendInnerReply(){
+      axios.post("/api/inner/add",{
+        replyID:this.reply.replyId,
+        content:this.innerReply,
+        replyTo:this.replyTo
+      },{
+        headers:{
+          'Authorization':this.$store.state.loginState.token
+        }
+      }).then(()=>{
+      this.$router.push("/refresh")
       })
     }
   }

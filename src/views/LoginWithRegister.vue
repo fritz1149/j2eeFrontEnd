@@ -208,7 +208,7 @@ export default{
         params:{id}
       })
       .then(res=>{
-        if(res["status"] == 200 && res["data"]["status"] == 200){
+        if(res["status"] === 200 && res["data"]["status"] === 200){
           console.log(res["data"]["data"])
          this.$store.commit("userData/saveUserData", res["data"]["data"])
         }
