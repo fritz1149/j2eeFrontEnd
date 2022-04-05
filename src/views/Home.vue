@@ -14,7 +14,7 @@
                 >
                   <v-list-item-content>
                     <v-list-item-title v-if="isLogin">
-                      关注的吧
+                      关注的吧 &nbsp;&nbsp;&nbsp; ({{this.sectionData.count }}) &nbsp;&nbsp;&nbsp; &nbsp; <router-link to="subscirbePage">更多 ></router-link>
                     </v-list-item-title>
                     <v-list-item-title v-else>
                       大家在看
@@ -23,7 +23,7 @@
                 </v-list-item>
                 <v-divider class="my-2"></v-divider>
                 <v-list-item
-                    v-for="(n,i) in this.sectionData" :key="i"
+                    v-for="(n,i) in this.sectionData.data" :key="i"
                   @click="toSection(n.sectionId)">
                   <v-list-item-content >
                     <v-list-item-title>
@@ -112,11 +112,11 @@ export default {
             'Authorization':this.$store.state.loginState.token
           }
         }).then((res)=>{
-          this.sectionData=res.data.data
+          this.sectionData=res.data
         })
       }else{
         axios.get('/api/section/').then((res)=>{
-          this.sectionData=res.data.data
+          this.sectionData=res.data
         })
       }
     },
