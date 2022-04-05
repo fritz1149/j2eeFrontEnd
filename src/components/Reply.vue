@@ -16,12 +16,12 @@
         <v-card height="200">
           <v-list-item three-line>
               {{reply.content}}
-              <v-img v-if="'imgUrl' in reply" :src="this.OssUrl+reply.imgUrl" max-height="100" :aspect-ratio="1/1"></v-img>
+              <v-img v-if="'imgUrl' in reply" :src="this.OssUrl+reply.imgUrl" max-height="100" :aspect-ratio="1"></v-img>
             <v-col cols="2">{{reply.sendTime}}</v-col>
           </v-list-item>
           <v-list-item>
             <v-spacer></v-spacer>
-              <v-text-field v-if="isReply" v-model:value="innerReply"></v-text-field><v-btn v-if="isReply" @click="sendInnerReply" >回复</v-btn>
+              <v-text-field v-if="isReply" v-model="innerReply"></v-text-field><v-btn v-if="isReply" @click="sendInnerReply" >回复</v-btn>
           </v-list-item>
           <v-btn text right v-if="myReply" @click="deleteReply">删除</v-btn>
 

@@ -11,7 +11,7 @@
               </v-list-item>
               <v-list-item class="post-section" @click="$router.push('/section/'+section['sectionId'])">
                 <v-list-item-content v-if="'avatarUrl' in section">
-                  <v-img :src="OssUrl+section['avatarUrl']" :aspect-ratio="1/1"
+                  <v-img :src="OssUrl+section['avatarUrl']" :aspect-ratio="1"
                          max-width="60%" max-height="60%"></v-img>
                 </v-list-item-content>
                 <v-list-item-content>
@@ -173,7 +173,7 @@ export default {
         this.loginNotification = true
         this.notification = "请登陆后再回帖~"
       }
-      if(this.$refs["replyForm"].validate()) {
+      else if(this.$refs["replyForm"].validate()) {
         let formData = new FormData()
         formData.append("content", vm.reply["text"])
         formData.append("postId", vm.id)
@@ -197,9 +197,9 @@ export default {
 </script>
 
 <style scoped>
-.post-section-describe{
-  font-size: small;
-}
+/*.post-section-describe{*/
+/*  font-size: small;*/
+/*}*/
 .post-section-title{
   font-size: x-large;
 }
