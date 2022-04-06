@@ -43,8 +43,7 @@
                   {{ reply.content }}
               </v-list-item>
               <v-list-item @click="fullImage = !fullImage">
-                <v-img v-if="'imgUrl' in reply" :src="imageSize(fullImage)"
-                       :max-height="fullImage ? 100000:miniSize"></v-img>
+                <img v-if="'imgUrl' in reply" :src="imageSize(fullImage)" alt="我的图图呢">
               </v-list-item>
               <v-list-item>
                 <v-spacer></v-spacer>
@@ -87,7 +86,7 @@ export default {
     imageSize() {
       return function (full) {
         return full ? this.OssUrl + this.reply.imgUrl :
-            this.OssUrl + this.reply.imgUrl + '?x-oss-process=image/resize,h_' + this.miniSize;
+            this.OssUrl + this.reply.imgUrl + '?x-oss-process=image/resize,m_fixed,h_' + this.miniSize;
       }
     }
   },
