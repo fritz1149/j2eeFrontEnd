@@ -76,7 +76,6 @@ export default {
       innerReply: null,
       replyTo: null,
       fullImage: false,
-      miniSize: 100,
     }
   },
   computed: {
@@ -85,8 +84,8 @@ export default {
     },
     imageSize() {
       return function (full) {
-        return full ? this.OssUrl + this.reply.imgUrl :
-            this.OssUrl + this.reply.imgUrl + '?x-oss-process=image/resize,m_fixed,h_' + this.miniSize;
+        return full ? this.OssUrl + this.reply.imgUrl + '?x-oss-process=image/resize,m_fixed,w_500' :
+            this.OssUrl + this.reply.imgUrl + '?x-oss-process=image/resize,m_fixed,w_100';
       }
     }
   },
