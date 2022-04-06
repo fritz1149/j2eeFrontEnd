@@ -42,8 +42,9 @@
               <v-list-item three-line>
                   {{ reply.content }}
               </v-list-item>
-              <v-list-item>
-                <v-img v-if="'imgUrl' in reply" :src="OssUrl+reply.imgUrl" max-height="100" :aspect-ratio="1"></v-img>
+              <v-list-item @click="fullImage = !fullImage">
+                <v-img v-if="'imgUrl' in reply" :src="imageSize(fullImage)"
+                       :max-height="fullImage ? 100000:miniSize"></v-img>
               </v-list-item>
               <v-list-item>
                 <v-spacer></v-spacer>
@@ -75,11 +76,19 @@ export default {
     return {
       innerReply: null,
       replyTo: null,
+      fullImage: false,
+      miniSize: 100,
     }
   },
   computed: {
     myReply() {
       return this.isReply && this.$store.state.loginState.isLogin && this.$store.state.userData.userId === this.reply.senderId
+    },
+    imageSize() {
+      return function (full) {
+        return full ? this.OssUrl + this.reply.imgUrl :
+            this.OssUrl + this.reply.imgUrl + '?x-oss-process=image/resize,h_' + this.miniSize;
+      }
     }
   },
   methods: {
