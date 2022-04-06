@@ -36,7 +36,7 @@ export default {
       textMax: 100,
       titleMax: 10,
       imgRule: [
-        v=>{ return v === null || v["type"].search("image") != -1 || "只能上传图片" },
+        v=>{ return v === null || v["type"].search("image") !== -1 || "只能上传图片" },
       ],
       textRule: [
         v=>{ return v.length <= this.textMax || "字数太多啦" },
@@ -63,11 +63,11 @@ export default {
             Authorization: vm.$store.state.loginState.token
           }
         }).then(res=>{
-          if(res["status"] == 200 && res["data"]["status"] == 200) {
+          if(res["status"] === 200 && res["data"]["status"] === 200) {
             vm.$router.push("/refresh")
           }
           else{
-            this.alert = true
+            vm.$emit("addPostError")
           }
         })
       }

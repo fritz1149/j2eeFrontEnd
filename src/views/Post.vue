@@ -26,7 +26,9 @@
           <v-divider/><br/>
           <reply :reply="ground_floor" :is-reply="false" v-if="ground_floor"></reply>
           <loading v-else></loading>
-          <reply v-for="(reply, key) in replyData.list" :key="key" :reply="reply" :is-reply="true"></reply>
+          <reply v-for="(reply, key) in replyData.list" :key="key" :reply="reply" :is-reply="true"
+            :style="key !== replyData.list.length?  'border-top-width: 0 !important;' : ''"></reply>
+          <br/>
           <v-pagination v-model="replyData.currentPage" :length="replyData.pages" v-on:input="getReplies" v-on:next="nextPage" v-on:previous="prevPage"/>
 
         </v-col>

@@ -43,7 +43,7 @@
                   &nbsp;发帖
                 </v-btn>
               </template>
-              <AddNewPost :section="section"></AddNewPost>
+              <AddNewPost :section="section" @addPostError="alert = true"></AddNewPost>
             </v-dialog>
           </v-col>
         </v-row>
@@ -154,7 +154,7 @@ export default {
             Authorization: vm.$store.state.loginState.token
           }
         }).then(res=>{
-          if(res["status"] == 200 && res["data"]["status"] == 200) {
+          if(res["status"] === 200 && res["data"]["status"] === 200) {
             vm.$router.push("/refresh")
           }
           else{
