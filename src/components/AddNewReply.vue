@@ -76,7 +76,7 @@ export default {
       var that = this
       reader.readAsDataURL(file)
       reader.onload = function() {
-        console.log(this.result)
+        console.log(this.result.slice(0, 20))
         that.imgShow = this.result
       }
     },

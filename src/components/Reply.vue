@@ -25,7 +25,7 @@
                       <v-list-item-title>{{ reply.sender.userName }}</v-list-item-title>
                       <v-spacer></v-spacer>
                       <v-list-item-icon>
-                        <v-btn icon>
+                        <v-btn icon @click="beginChat">
                           <v-icon color="green lighten-1">mdi-chat-plus-outline</v-icon>
                         </v-btn>
                       </v-list-item-icon>
@@ -110,6 +110,14 @@ export default {
         }
       }).then(() => {
         this.$router.push("/refresh")
+      })
+    },
+    beginChat(){
+      axios.post("/api/message/contact", null, {
+        params: {contactId: this.reply["sender"]["userId"]},
+        headers: {Authorization: this.$store.state.loginState.token}
+      }).then(res=>{
+        console.log(res)
       })
     }
   }

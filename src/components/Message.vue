@@ -1,8 +1,36 @@
 <template>
-  <v-dialog v-model="display" @click:outside="$emit('update:display', false)">
-    <v-card>
-      <p>hello message</p>
-    </v-card>
+  <v-dialog v-model="display" width="80%"
+            @click:outside="$emit('update:display', false)">
+    <v-container>
+      <v-row no-gutters>
+        <v-col cols="2">
+          <v-list three-line>
+            <v-list-item-group v-model="contactSelected">
+              <v-list-item v-for="(user, key) in contact" :key="key">
+                <v-list-item-avatar size="40%">
+                  <v-img :src="OssUrl+user['userAvatar']"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>{{ user['userName'] }}</v-list-item-title>
+                  <v-spacer></v-spacer>
+                  <v-list-item-icon>
+                    <v-btn icon>
+                      <v-icon color="red lighten-1">mdi-account-remove</v-icon>
+                    </v-btn>
+                  </v-list-item-icon>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-col>
+        <v-col cols="10">
+          <v-card outlined tile height="100%">
+            <v-list>
+              xx
+            </v-list></v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-dialog>
 </template>
 
@@ -38,6 +66,7 @@ export default {
       reconnectTimer: null,
       connected: false,
       contact: [],
+      contactSelected: 0,
     }
   },
   created(){
@@ -78,9 +107,13 @@ export default {
       }
     },
     getContact(){
+      let vm = this;
       axios.get("/api/message/contact", {headers:{Authorization: this.$store.state.loginState.token}})
       .then(res=>{
         console.log(res)
+        if(res["status"] === 200 && res["data"]["status"] === 200){
+          vm.contact = res["data"]["data"]
+        }
       })
     }
   },
