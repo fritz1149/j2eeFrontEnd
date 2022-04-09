@@ -51,13 +51,12 @@
                 <v-card-subtitle class="Subtitle">
                   {{ reply.sendTime }}
                 </v-card-subtitle>
-
               </v-list-item>
             </v-list>
           </v-card>
           <v-expand-transition>
           <v-card v-if="showInnerReply">
-            <AddInnerReply></AddInnerReply>
+            <AddInnerReply :reply="reply" :reply-to="replyTo"></AddInnerReply>
           </v-card>
           </v-expand-transition>
         </v-col>
