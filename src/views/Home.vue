@@ -14,7 +14,7 @@
                 >
                   <v-list-item-content>
                     <v-list-item-title v-if="isLogin">
-                      关注的吧 &nbsp;&nbsp;&nbsp; ({{this.sectionData.count }}) &nbsp;&nbsp;&nbsp; &nbsp; <router-link to="subscirbePage">更多 ></router-link>
+                      关注的吧 &nbsp;&nbsp;&nbsp; ({{this.sectionData.count }}) &nbsp;&nbsp;&nbsp; &nbsp; <router-link to="subscribePage">更多 ></router-link>
                     </v-list-item-title>
                     <v-list-item-title v-else>
                       大家在看
