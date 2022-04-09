@@ -10,8 +10,7 @@
                     <v-list-item-avatar size="10%">
                       <v-img :src="OssUrl+reply.sender.userAvatar"></v-img>
                     </v-list-item-avatar>
-                    <br/><br/>
-                    <v-list-item-title>{{ reply.sender.userName }}</v-list-item-title>
+                    <v-list-item-title style="text-align: center;margin-top: 20px">{{ reply.sender.userName }}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -36,25 +35,31 @@
             </v-menu>
           </v-card>
         </v-col>
-        <v-col cols="9">
+        <v-col cols="10">
           <v-card elevation="0" tile>
             <v-list>
               <v-list-item three-line>
                   {{ reply.content }}
               </v-list-item>
-              <picture-preview :img-url="reply['imgUrl']"></picture-preview>
+              <picture-preview v-if="reply['imgUrl']" :img-url="reply['imgUrl']"></picture-preview>
               <v-list-item>
-                <v-spacer></v-spacer>
-                {{ reply.sendTime }}
               </v-list-item>
               <v-list-item>
-                <v-btn text right v-if="myReply" @click="deleteReply">删除</v-btn>
                 <v-spacer></v-spacer>
-                <v-text-field v-if="isReply" v-model="innerReply"></v-text-field>
-                <v-btn v-if="isReply" @click="sendInnerReply">回复</v-btn>
+                <v-btn text plain right v-if="myReply" @click="deleteReply"><v-icon>mdi-delete</v-icon> 删除</v-btn>
+                <v-btn v-if="isReply" text plain @click="showInnerReply=!showInnerReply"><v-icon>mdi-message</v-icon>回复</v-btn>
+                <v-card-subtitle class="Subtitle">
+                  {{ reply.sendTime }}
+                </v-card-subtitle>
+
               </v-list-item>
             </v-list>
           </v-card>
+          <v-expand-transition>
+          <v-card v-if="showInnerReply">
+            <AddInnerReply></AddInnerReply>
+          </v-card>
+          </v-expand-transition>
         </v-col>
       </v-row>
     </v-card>
@@ -63,18 +68,19 @@
 <script>
 import axios from "axios";
 import PicturePreview from "@/components/PicturePreview";
+import AddInnerReply from "@/components/AddInnerReply";
 
 export default {
   name: "Reply",
-  components: {PicturePreview},
+  components: {PicturePreview,AddInnerReply},
   props: {
     reply: Object,
     isReply: Boolean,
   },
   data: function () {
     return {
-      innerReply: null,
       replyTo: null,
+      showInnerReply:false,
     }
   },
   computed: {
@@ -89,19 +95,6 @@ export default {
         headers: {Authorization: this.$store.state.loginState.token}
       }).then(res => {
         console.log(res)
-        this.$router.push("/refresh")
-      })
-    },
-    sendInnerReply() {
-      axios.post("/api/inner/add", {
-        replyID: this.reply.replyId,
-        content: this.innerReply,
-        replyTo: this.replyTo
-      }, {
-        headers: {
-          'Authorization': this.$store.state.loginState.token
-        }
-      }).then(() => {
         this.$router.push("/refresh")
       })
     },
@@ -126,5 +119,7 @@ export default {
 </script>
 
 <style scoped>
-
+.Subtitle{
+  color: #535353;
+}
 </style>
