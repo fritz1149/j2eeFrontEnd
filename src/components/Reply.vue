@@ -113,12 +113,20 @@ export default {
       })
     },
     beginChat(){
-      axios.post("/api/message/contact", null, {
-        params: {contactId: this.reply["sender"]["userId"]},
-        headers: {Authorization: this.$store.state.loginState.token}
-      }).then(res=>{
-        console.log(res)
-      })
+      if(this.reply["sender"]["userId"] === this.$store.state.userData.userId)
+        return;
+      else {
+        axios.post("/api/message/contact/add", null, {
+          params: {contactId: this.reply["sender"]["userId"]},
+          headers: {Authorization: this.$store.state.loginState.token}
+        }).then(res => {
+          if (res["status"] === 200 && res["data"]["status"] === 200) {
+            // console.log(this.reply["sender"])
+            this.$store.commit("message/addNewContact", this.reply["sender"])
+            this.$store.commit("message/showMessage")
+          }
+        })
+      }
     }
   }
 }

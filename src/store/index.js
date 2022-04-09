@@ -73,6 +73,28 @@ const userData={
   }
 }
 
+const message = {
+  namespaced: true,
+  state:{
+    newContact: null,
+    showMessage: false,
+  },
+  mutations:{
+    addNewContact(state, data){
+      state.newContact = data
+    },
+    popNewContact(state){
+      state.newContact = null
+    },
+    showMessage(state){
+      state.showMessage = true
+    },
+    hideMessage(state){
+      state.showMessage = false
+    }
+  }
+}
+
 export default new Vuex.Store({
   state: {
   },
@@ -81,6 +103,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    loginState, userData
+    loginState, userData, message
   }
 })

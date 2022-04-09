@@ -1,10 +1,10 @@
 <template>
   <v-dialog v-model="display" width="80%"
-            @click:outside="$emit('update:display', false)">
+            @click:outside="$store.commit('message/hideMessage')">
     <v-container>
       <v-row no-gutters>
         <v-col cols="2">
-          <v-list three-line>
+          <v-list three-line height="100%">
             <v-list-item-group v-model="contactSelected">
               <v-list-item v-for="(user, key) in contact" :key="key">
                 <v-list-item-avatar size="40%">
@@ -15,7 +15,7 @@
                   <v-spacer></v-spacer>
                   <v-list-item-icon>
                     <v-btn icon>
-                      <v-icon color="red lighten-1">mdi-account-remove</v-icon>
+                      <v-icon color="red lighten-1" @click="removeContact(user['userId'], key)">mdi-account-remove</v-icon>
                     </v-btn>
                   </v-list-item-icon>
                 </v-list-item-content>
@@ -26,8 +26,27 @@
         <v-col cols="10">
           <v-card outlined tile height="100%">
             <v-list>
-              xx
-            </v-list></v-card>
+              <v-list-item-group>
+                <v-list-item v-for="(message, key) in history[contactSelected]" :key="key">
+                  <v-list-item-avatar size="5%">
+                    <v-img :src="OssUrl+contactFocused['userAvatar']"
+                           v-if="message['senderId'] !== $store.state.userData.userId"></v-img>
+                    <v-img :src="OssUrl+$store.state.userData.userAvatar" v-else></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title style="color: #3c97bf" v-if="message['senderId'] !== $store.state.userData.userId">
+                      {{contactFocused['userName'] }}</v-list-item-title>
+                    <v-list-item-title style="color: #42b983" v-else>
+                      {{ $store.state.userData.userName }}</v-list-item-title>
+                    {{message['content']}}
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+            <v-divider></v-divider>
+            <add-new-message v-if="contactFocused"
+                 :contact-id="contactFocused['userId']" @send="afterSend"></add-new-message>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -36,15 +55,19 @@
 
 <script>
 import axios from "axios";
+import AddNewMessage from "@/components/AddNewMessage";
 
 export default {
   name: "Message",
-  props:["display"],
+  components: {AddNewMessage},
   computed: {
     isLogin(){return this.$store.state.loginState.isLogin && this.$store.state.userData["userId"] !== null},
     userId(){return this.$store.state.userData["userId"];},
     token(){return this.$store.state.loginState.token;},
-    socketPath(){return "ws://" + location.host + "/websocket/" + this.$store.state.userData.userId;}
+    socketPath(){return "ws://" + location.host + "/websocket/" + this.$store.state.userData.userId;},
+    newContact(){return this.$store.state.message.newContact;},
+    display(){return this.$store.state.message.showMessage;},
+    contactFocused(){return this.contact[this.contactSelected]},
   },
   watch:{
     isLogin(val){
@@ -54,6 +77,14 @@ export default {
       else{
         this.socket.close()
         clearTimeout(this.reconnectTimer)
+      }
+    },
+    newContact(val){
+      if(val !== null){
+        let data = this.$store.state.message.newContact
+        if(!this.contactIdSet.has(data["userId"]))
+          this.contact.push(data)
+        this.$store.commit("message/popNewContact")
       }
     }
   },
@@ -66,7 +97,9 @@ export default {
       reconnectTimer: null,
       connected: false,
       contact: [],
-      contactSelected: 0,
+      history: [],
+      contactIdSet: new Set(),
+      contactSelected: 0
     }
   },
   created(){
@@ -110,11 +143,48 @@ export default {
       let vm = this;
       axios.get("/api/message/contact", {headers:{Authorization: this.$store.state.loginState.token}})
       .then(res=>{
-        console.log(res)
         if(res["status"] === 200 && res["data"]["status"] === 200){
           vm.contact = res["data"]["data"]
+          console.log(res["data"]["data"])
+          for(let unit in res["data"]["data"]){
+            // console.log(unit)
+            let userId = res["data"]["data"][unit]["userId"]
+            vm.contactIdSet.add(userId)
+            vm.getHistory(1, 15, userId, unit, true)
+          }
         }
       })
+    },
+    getHistory(pageNum, pageSize, contactId, index, init){
+      let vm = this
+      axios.get("/api/message/get", {
+        headers:{Authorization: this.$store.state.loginState.token},
+        params:{contactId: contactId, pageNum: pageNum, pageSize: pageSize}
+      }).then(res=>{
+        if(res["status"] === 200 && res["data"]["status"] === 200){
+          if(init === true){
+            vm.history[index] = res["data"]["data"]["list"].reverse()
+            console.log(vm.history[index])
+          }
+        }
+      })
+    },
+    removeContact(contactId, index){
+      let vm = this
+      axios.post("/api/message/contact/remove", null,{
+        headers:{Authorization: this.$store.state.loginState.token},
+        params: {contactId: contactId}
+      }).then(res=>{
+        console.log(res)
+        if(res["status"] === 200 && res["data"]["status"] === 200){
+          let data = vm.contact[index]
+          vm.contact.splice(index, 1)
+          vm.contactIdSet.delete(data["userId"])
+        }
+      })
+    },
+    afterSend(msg){
+      console.log(msg)
     }
   },
 }

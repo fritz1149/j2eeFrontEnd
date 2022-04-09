@@ -1,7 +1,7 @@
 <template>
   <v-app>
-      <NavBar :show-message.sync="showMessage"></NavBar>
-      <Message :display.sync="showMessage"></Message>
+      <NavBar></NavBar>
+      <Message></Message>
       <router-view></router-view>
   </v-app>
 </template>
@@ -34,7 +34,6 @@ export default {
   name: 'App',
   components: {Message, NavBar},
   data: () => ({
-    showMessage: false,
   }),
 };
 </script>

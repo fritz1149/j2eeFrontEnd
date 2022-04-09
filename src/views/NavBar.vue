@@ -5,7 +5,7 @@
       <span>Home</span>
     </v-btn>
     <v-spacer></v-spacer>
-    <v-btn text value="message" v-if="isLogin" @click="$emit('update:showMessage', true)">
+    <v-btn text value="message" v-if="isLogin" @click="$store.commit('message/showMessage')">
       <v-icon>mdi-message</v-icon>
       <span>Message</span>
     </v-btn>
@@ -36,7 +36,6 @@
 <script>
 export default {
   name: "NavBar",
-  props:["showMessage"],
   data: function (){
     return{
     }
