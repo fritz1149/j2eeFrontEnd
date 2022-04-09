@@ -14,6 +14,9 @@ const routes = [
     path: '/',
     component: Home,
     alias: '/home'
+  },{
+    path: '/subscribePage',
+    component: SubScribePage,
   },
   {
     path:'/login',
@@ -54,6 +57,7 @@ const router = new VueRouter({
 })
 
 import store from "../store/index.js"
+import SubScribePage from "@/views/SubScribePage";
 router.beforeEach((to, from, next) => {
   checkToken()
   async function checkToken(){
