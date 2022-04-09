@@ -25,7 +25,7 @@
         </v-col>
         <v-col cols="10">
           <v-card outlined tile height="100%">
-            <v-list>
+            <v-list v-if="contactSelected !== null && contactSelected !== undefined">
               <v-list-item-group>
                 <v-list-item v-for="(message, key) in historyFocused" :key="key">
                   <v-list-item-avatar size="5%">
@@ -84,14 +84,18 @@ export default {
     newContact(val){
       if(val !== null){
         let data = this.$store.state.message.newContact
-        if(!this.contactIdSet.has(data["userId"]))
-          this.contact.push(data)
+        if(!this.contactIdSet.has(data["userId"])) {
+          this.addContact(data["userId"])
+        }
         this.$store.commit("message/popNewContact")
       }
     },
     contactSelected(val){
-      console.log(this.contact[val])
-      this.historyFocused = this.history.get(this.contact[val]["userId"])
+      if(val !== null && val !== undefined){
+        console.log(this.contact[val])
+        this.historyFocused = this.history.get(this.contact[val]["userId"])
+        console.log(this.historyFocused)
+      }
     }
   },
   beforeDestroy() {
@@ -104,9 +108,9 @@ export default {
       connected: false,
       contact: [],
       history: new Map(),
-      contactIdSet: new Set(),
-      contactSelected: 0,
       historyFocused: [],
+      contactIdSet: new Set(),
+      contactSelected: null,
     }
   },
   created(){
@@ -139,15 +143,7 @@ export default {
         let senderId = msg["senderId"]
         console.log(senderId)
         if(!vm.contactIdSet.has(senderId)){
-          vm.contactIdSet.add(senderId)
-          axios.get("/api/user/get", {params:{"id": senderId}})
-          .then(res=>{
-            if(res["status"] === 200 && res["data"]["status"] === 200){
-              vm.contact.push(res["data"])
-            }
-          }).then(()=>{
-            vm.getHistory(1, 15, senderId, vm.contact.length - 1, true)
-          })
+          vm.addContact(senderId)
         }
         else{
           vm.history.get(senderId).push(msg)
@@ -163,6 +159,20 @@ export default {
           vm.reconnectTimer = setTimeout(vm.connectSocket, 10000)
         }
       }
+    },
+    addContact(contactId){
+      let vm = this
+      vm.contactIdSet.add(contactId)
+      axios.get("/api/user/get", {params:{"id": contactId}})
+          .then(res=>{
+            console.log("new contact: ");
+            console.log(res)
+            if(res["status"] === 200 && res["data"]["status"] === 200){
+              vm.contact.push(res["data"]["data"])
+            }
+          }).then(()=>{
+        vm.getHistory(1, 15, contactId, vm.contact.length - 1, true)
+      })
     },
     getContact(){
       let vm = this;
@@ -189,6 +199,8 @@ export default {
         if(res["status"] === 200 && res["data"]["status"] === 200){
           if(init === true){
             vm.history.set(contactId, res["data"]["data"]["list"].reverse())
+            console.log("history load: " + contactId)
+            console.log(vm.history.get(contactId))
             if(index === vm.contactSelected)
               vm.historyFocused = vm.history.get(contactId)
           }
@@ -205,9 +217,9 @@ export default {
         if(res["status"] === 200 && res["data"]["status"] === 200){
           let data = vm.contact[index]
           vm.contact.splice(index, 1)
-          vm.history.splice(index, 1)
+          vm.history.delete(contactId)
           vm.contactIdSet.delete(data["userId"])
-          vm.historyFocused = vm.history.get(vm.contactFocused['userId'])
+          vm.contactSelected = null
         }
       })
     },
