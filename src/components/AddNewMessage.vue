@@ -98,6 +98,7 @@ export default {
     clear(){
       this.message.text = ''
       this.message.file = null
+      this.imgShow = null
       this.$refs["postForm"].resetValidation();
     }
   }

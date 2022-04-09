@@ -90,7 +90,8 @@ export default {
       }
     },
     contactSelected(val){
-      this.historyFocused = this.history[val]
+      console.log(this.contact[val])
+      this.historyFocused = this.history.get(this.contact[val]["userId"])
     }
   },
   beforeDestroy() {
@@ -102,7 +103,7 @@ export default {
       reconnectTimer: null,
       connected: false,
       contact: [],
-      history: [],
+      history: new Map(),
       contactIdSet: new Set(),
       contactSelected: 0,
       historyFocused: [],
@@ -133,6 +134,24 @@ export default {
         console.log("socket message:")
         msg = JSON.parse(msg["data"])
         console.log(msg)
+        let type = msg["type"]
+        msg = msg["data"]
+        let senderId = msg["senderId"]
+        console.log(senderId)
+        if(!vm.contactIdSet.has(senderId)){
+          vm.contactIdSet.add(senderId)
+          axios.get("/api/user/get", {params:{"id": senderId}})
+          .then(res=>{
+            if(res["status"] === 200 && res["data"]["status"] === 200){
+              vm.contact.push(res["data"])
+            }
+          }).then(()=>{
+            vm.getHistory(1, 15, senderId, vm.contact.length - 1, true)
+          })
+        }
+        else{
+          vm.history.get(senderId).push(msg)
+        }
       }
       this.socket.onclose = function (){
         // console.log("socket close " + vm.isLogin + " " + vm.$store.state.loginState.isLogin + " " + vm.$store.state.userData["userId"])
@@ -169,10 +188,9 @@ export default {
       }).then(res=>{
         if(res["status"] === 200 && res["data"]["status"] === 200){
           if(init === true){
-            vm.history[index] = res["data"]["data"]["list"].reverse()
-            if(index === 1)
-              vm.historyFocused = vm.history[index]
-            console.log(vm.history[index])
+            vm.history.set(contactId, res["data"]["data"]["list"].reverse())
+            if(index === vm.contactSelected)
+              vm.historyFocused = vm.history.get(contactId)
           }
         }
       })
@@ -189,6 +207,7 @@ export default {
           vm.contact.splice(index, 1)
           vm.history.splice(index, 1)
           vm.contactIdSet.delete(data["userId"])
+          vm.historyFocused = vm.history.get(vm.contactFocused['userId'])
         }
       })
     },
