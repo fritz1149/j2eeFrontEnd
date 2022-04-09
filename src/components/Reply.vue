@@ -42,9 +42,7 @@
               <v-list-item three-line>
                   {{ reply.content }}
               </v-list-item>
-              <v-list-item @click="fullImage = !fullImage">
-                <img v-if="'imgUrl' in reply" :src="imageSize(fullImage)" alt="我的图图呢">
-              </v-list-item>
+              <picture-preview :img-url="reply['imgUrl']"></picture-preview>
               <v-list-item>
                 <v-spacer></v-spacer>
                 {{ reply.sendTime }}
@@ -64,9 +62,11 @@
 
 <script>
 import axios from "axios";
+import PicturePreview from "@/components/PicturePreview";
 
 export default {
   name: "Reply",
+  components: {PicturePreview},
   props: {
     reply: Object,
     isReply: Boolean,
@@ -75,19 +75,12 @@ export default {
     return {
       innerReply: null,
       replyTo: null,
-      fullImage: false,
     }
   },
   computed: {
     myReply() {
       return this.isReply && this.$store.state.loginState.isLogin && this.$store.state.userData.userId === this.reply.senderId
     },
-    imageSize() {
-      return function (full) {
-        return full ? this.OssUrl + this.reply.imgUrl + '?x-oss-process=image/resize,m_fixed,w_500' :
-            this.OssUrl + this.reply.imgUrl + '?x-oss-process=image/resize,m_fixed,w_100';
-      }
-    }
   },
   methods: {
     deleteReply() {

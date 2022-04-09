@@ -34,8 +34,7 @@ export default {
   props:['contactId'],
   watch:{
     contactId(){
-      this.message = this.temp
-      this.$refs["postForm"].resetValidation();
+      this.clear()
     }
   },
   data:function () {
@@ -43,12 +42,7 @@ export default {
       message: {
         allow: true,
         text: '',
-        file: null
-      },
-      temp: {
-        allow: true,
-        text: '',
-        file: null
+        file: null,
       },
       textMax: 100,
       titleMax: 10,
@@ -92,14 +86,19 @@ export default {
         }).then(res=>{
           console.log(res)
           if(res["status"] === 200 && res["data"]["status"] === 200) {
-            vm.$emit("send", vm.message)
-            this.message = this.temp
+            vm.$emit("send", res["data"]["data"])
+            this.clear()
           }
           else{
             vm.$emit("sendFailed")
           }
         })
       }
+    },
+    clear(){
+      this.message.text = ''
+      this.message.file = null
+      this.$refs["postForm"].resetValidation();
     }
   }
 }

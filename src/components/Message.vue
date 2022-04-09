@@ -27,7 +27,7 @@
           <v-card outlined tile height="100%">
             <v-list>
               <v-list-item-group>
-                <v-list-item v-for="(message, key) in history[contactSelected]" :key="key">
+                <v-list-item v-for="(message, key) in historyFocused" :key="key">
                   <v-list-item-avatar size="5%">
                     <v-img :src="OssUrl+contactFocused['userAvatar']"
                            v-if="message['senderId'] !== $store.state.userData.userId"></v-img>
@@ -39,13 +39,14 @@
                     <v-list-item-title style="color: #42b983" v-else>
                       {{ $store.state.userData.userName }}</v-list-item-title>
                     {{message['content']}}
+                    <picture-preview :img-url="message['imgUrl']"></picture-preview>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
             </v-list>
             <v-divider></v-divider>
             <add-new-message v-if="contactFocused"
-                 :contact-id="contactFocused['userId']" @send="afterSend"></add-new-message>
+                 :contact-id="contactFocused['userId']" @send="pushBackMessage"></add-new-message>
           </v-card>
         </v-col>
       </v-row>
@@ -56,10 +57,11 @@
 <script>
 import axios from "axios";
 import AddNewMessage from "@/components/AddNewMessage";
+import PicturePreview from "@/components/PicturePreview";
 
 export default {
   name: "Message",
-  components: {AddNewMessage},
+  components: {PicturePreview, AddNewMessage},
   computed: {
     isLogin(){return this.$store.state.loginState.isLogin && this.$store.state.userData["userId"] !== null},
     userId(){return this.$store.state.userData["userId"];},
@@ -86,6 +88,9 @@ export default {
           this.contact.push(data)
         this.$store.commit("message/popNewContact")
       }
+    },
+    contactSelected(val){
+      this.historyFocused = this.history[val]
     }
   },
   beforeDestroy() {
@@ -99,7 +104,8 @@ export default {
       contact: [],
       history: [],
       contactIdSet: new Set(),
-      contactSelected: 0
+      contactSelected: 0,
+      historyFocused: [],
     }
   },
   created(){
@@ -164,6 +170,8 @@ export default {
         if(res["status"] === 200 && res["data"]["status"] === 200){
           if(init === true){
             vm.history[index] = res["data"]["data"]["list"].reverse()
+            if(index === 1)
+              vm.historyFocused = vm.history[index]
             console.log(vm.history[index])
           }
         }
@@ -179,12 +187,13 @@ export default {
         if(res["status"] === 200 && res["data"]["status"] === 200){
           let data = vm.contact[index]
           vm.contact.splice(index, 1)
+          vm.history.splice(index, 1)
           vm.contactIdSet.delete(data["userId"])
         }
       })
     },
-    afterSend(msg){
-      console.log(msg)
+    pushBackMessage(msg){
+      this.historyFocused.push(msg)
     }
   },
 }
