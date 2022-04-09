@@ -11,7 +11,7 @@
               </v-list-item>
               <v-list-item class="post-section" @click="$router.push('/section/'+section['sectionId'])">
                 <v-list-item-content v-if="'avatarUrl' in section">
-                  <v-img :src="OssUrl+section['avatarUrl']" :aspect-ratio="1/1"
+                  <v-img :src="OssUrl+section['avatarUrl']" :aspect-ratio="1"
                          max-width="60%" max-height="60%"></v-img>
                 </v-list-item-content>
                 <v-list-item-content>
@@ -26,7 +26,9 @@
           <v-divider/><br/>
           <reply :reply="ground_floor" :is-reply="false" v-if="ground_floor"></reply>
           <loading v-else></loading>
-          <reply v-for="(reply, key) in replyData.list" :key="key" :reply="reply" :is-reply="true"></reply>
+          <reply v-for="(reply, key) in replyData.list" :key="key" :reply="reply" :is-reply="true"
+            :style="key !== replyData.list.length?  'border-top-width: 0 !important;' : ''"></reply>
+          <br/>
           <v-pagination v-model="replyData.currentPage" :length="replyData.pages" v-on:input="getReplies" v-on:next="nextPage" v-on:previous="prevPage"/>
 
         </v-col>
@@ -34,6 +36,7 @@
           <v-dialog width="50%">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
+                  v-if="$store.state.loginState.isLogin"
                   color="blue lighten-2"
                   dark
                   v-bind="attrs"
@@ -42,21 +45,17 @@
                 <v-icon>mdi-comment-plus</v-icon>
                 &nbsp;写回复
               </v-btn>
+              <v-btn
+                  color="blue-grey darken-2"
+                  dark
+                  v-else
+                  @click="noticeLogin"
+              >
+                <v-icon>mdi-comment-plus</v-icon>
+                &nbsp;写回复
+              </v-btn>
             </template>
-            <v-card>
-              <v-form v-model="reply.allow" ref="replyForm">
-                <v-file-input v-model="reply.file" accept="image/*"
-                    prepend-icon="mdi-image" :rules="imgRule"
-                ></v-file-input>
-                <v-text-field v-model="reply.text" placeholder="输入你的回复"
-                    :counter="textMax" :rules="textRule"
-                ></v-text-field>
-                <v-btn @click="submitReply">
-                  <v-icon>mdi-comment-check</v-icon>
-                  提交
-                </v-btn>
-              </v-form>
-            </v-card>
+            <AddNewReply :id="id"></AddNewReply>
           </v-dialog>
         </v-col>
       </v-row>
@@ -71,9 +70,10 @@ import axios from "axios";
 import Reply from "@/components/Reply";
 import Loading from "@/components/loading";
 import LoginNotification from "@/components/LoginNotification";
+import AddNewReply from "@/components/AddNewReply";
 export default {
   name: "Post",
-  components: {LoginNotification, Loading, Reply},
+  components: {LoginNotification, Loading, Reply,AddNewReply},
   props: ["id"],
   data: function (){
     return{
@@ -86,19 +86,6 @@ export default {
       loginNotification: false,
       notification: "",
       alert: false,
-      reply: {
-        allow: true,
-        text: '',
-        file: null,
-      },
-      textMax: 100,
-      imgRule: [
-          v=>{ return v === null || v["type"].search("image") !== -1 || "只能上传图片" },
-      ],
-      textRule: [
-        v=>{ return v.length <= this.textMax || "字数太多啦" },
-        v=>{ return v.length > 0 || '不能什么都不写哦'}
-      ]
     }
   },
   watch:{
@@ -167,39 +154,18 @@ export default {
         this.getReplies();
       }
     },
-    submitReply(){
-      let vm = this
-      if(!this.$store.state.loginState.isLogin){
-        this.loginNotification = true
-        this.notification = "请登陆后再回帖~"
-      }
-      if(this.$refs["replyForm"].validate()) {
-        let formData = new FormData()
-        formData.append("content", vm.reply["text"])
-        formData.append("postId", vm.id)
-        formData.append("file", vm.reply["file"])
-        axios.post("/api/reply/send", formData, {
-          headers:{
-            Authorization: vm.$store.state.loginState.token
-          }
-        }).then(res=>{
-          if(res["status"] === 200 && res["data"]["status"] === 200) {
-            vm.$router.push("/refresh")
-          }
-          else{
-            this.alert = true
-          }
-        })
-      }
-    }
+    noticeLogin(){
+      this.loginNotification = true
+      this.notification = '请登陆后再关注~'
+    },
   }
 }
 </script>
 
 <style scoped>
-.post-section-describe{
-  font-size: small;
-}
+/*.post-section-describe{*/
+/*  font-size: small;*/
+/*}*/
 .post-section-title{
   font-size: x-large;
 }

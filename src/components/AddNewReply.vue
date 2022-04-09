@@ -4,23 +4,24 @@
         color="indigo"
         dark
     >
-      <v-toolbar-title>发送帖子</v-toolbar-title>
+      <v-toolbar-title>添加回复</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-form v-model="post.allow" ref="postForm">
-      <v-text-field filled v-model="post.title"
-                    label="标题"
-                    placeholder="输入你的标题"
-                    :counter="titleMax" :rules="titleRule"
-      ></v-text-field>
-      <v-textarea filled v-model="post.text"
-                  label="回复"
-                  placeholder="输入你的回复"
-                    :counter="textMax" :rules="textRule"
+    <v-form v-model="reply.allow" ref="replyForm">
+      <v-textarea
+          filled
+          name="input-7-4"
+          label="回复内容"
+          placeholder="输入你的回复"
+          v-model="reply.text"
+          :counter="textMax" :rules="textRule"
       ></v-textarea>
-      <v-file-input filled v-model="post.file" accept="image/*"
+
+      <v-file-input
+          filled
+          v-model="reply.file" accept="image/*"
                     prepend-icon="mdi-image" :rules="imgRule"
-                    @change="changeImg"
+          @change="changeImg"
       ></v-file-input>
       <v-expand-transition>
       <v-img
@@ -31,31 +32,28 @@
           class="grey lighten-3"
       ></v-img>
       </v-expand-transition>
-      <v-btn @click="submitPost" color="success" block>
+      <v-btn @click="submitReply" block color="success">
         <v-icon>mdi-comment-check</v-icon>
         提交
       </v-btn>
     </v-form>
   </v-card>
-
 </template>
 
 <script>
 import axios from "axios";
 
 export default {
-  name: "AddNewPost",
-  props:['section'],
-  data:function () {
+  name: "AddNewReply",
+  props:['id'],
+  data:function (){
     return{
-      post: {
+      reply: {
         allow: true,
-        title: '',
         text: '',
-        file: null
+        file: null,
       },
       textMax: 100,
-      titleMax: 10,
       imgRule: [
         v=>{ return v === null || v["type"].search("image") !== -1 || "只能上传图片" },
       ],
@@ -63,20 +61,16 @@ export default {
         v=>{ return v.length <= this.textMax || "字数太多啦" },
         v=>{ return v.length > 0 || '不能什么都不写哦'}
       ],
-      titleRule:[
-        v=>{ return v.length <= this.titleMax || "字数太多啦" },
-        v=>{ return v.length > 0 || '不能什么都不写哦'}
-      ],
-      imgShow:null
+      imgShow:null,
     }
   },
   methods:{
     changeImg(){
-      if(!this.post.file){
+      if(!this.reply.file){
         this.imgShow=null
         return
       }
-      var file = this.post.file;
+      var file = this.reply.file;
       console.log(file)
       var reader = new FileReader()
       var that = this
@@ -86,16 +80,14 @@ export default {
         that.imgShow = this.result
       }
     },
-    submitPost(){
+    submitReply(){
       let vm = this
-      if(this.$refs["postForm"].validate()) {
+      if(this.$refs["replyForm"].validate()) {
         let formData = new FormData()
-        formData.append("title", vm.post["title"])
-        formData.append("content", vm.post["text"])
-        formData.append("section", vm.section["sectionId"])
-        console.log(vm.section["sectionId"])
-        formData.append("pic", vm.post["file"])
-        axios.post("/api/post/add", formData, {
+        formData.append("content", vm.reply["text"])
+        formData.append("postId", vm.id)
+        formData.append("file", vm.reply["file"])
+        axios.post("/api/reply/send", formData, {
           headers:{
             Authorization: vm.$store.state.loginState.token
           }
@@ -104,7 +96,7 @@ export default {
             vm.$router.push("/refresh")
           }
           else{
-            vm.$emit("addPostError")
+            this.alert = true
           }
         })
       }
