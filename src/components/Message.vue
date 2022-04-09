@@ -1,10 +1,11 @@
 <template>
-  <v-dialog v-model="display" width="80%"
+  <v-dialog  v-model="display" width="80%"
             @click:outside="$store.commit('message/hideMessage')">
     <v-container>
-      <v-row no-gutters>
-        <v-col cols="2">
-          <v-list three-line height="100%">
+      <v-row  no-gutters>
+        <v-col cols="3">
+          <v-card height="100%" class="pa-4" >
+          <v-list style="background-color: #e4edff" three-line height="100%">
             <v-list-item-group v-model="contactSelected">
               <v-list-item v-for="(user, key) in contact" :key="key">
                 <v-list-item-avatar size="40%">
@@ -22,31 +23,43 @@
               </v-list-item>
             </v-list-item-group>
           </v-list>
+          </v-card>
         </v-col>
-        <v-col cols="10">
-          <v-card outlined tile height="100%">
-            <v-list v-if="contactSelected !== null && contactSelected !== undefined">
-              <v-list-item-group>
+        <v-col cols="9">
+          <v-card height="100%" class="pa-4" >
+            <v-list v-if="contactSelected !== null && contactSelected !== undefined" style="background-color: #e4edff">
+              <v-list-item-group >
                 <v-list-item v-for="(message, key) in historyFocused" :key="key">
-                  <v-list-item-avatar size="5%">
+                  <v-list-item-avatar size="50px">
                     <v-img :src="OssUrl+contactFocused['userAvatar']"
                            v-if="message['senderId'] !== $store.state.userData.userId"></v-img>
                     <v-img :src="OssUrl+$store.state.userData.userAvatar" v-else></v-img>
                   </v-list-item-avatar>
-                  <v-list-item-content>
+                  <v-list-item-content style="width: 100%" v-if="message['senderId'] !== $store.state.userData.userId">
                     <v-list-item-title style="color: #3c97bf" v-if="message['senderId'] !== $store.state.userData.userId">
                       {{contactFocused['userName'] }}</v-list-item-title>
-                    <v-list-item-title style="color: #42b983" v-else>
+                    <v-card color="white" class="pa-5" max-width="66%" >
+                      {{message['content']}}
+                      <picture-preview v-if="message['imgUrl']" :img-url="message['imgUrl']"></picture-preview>
+                    </v-card>
+                  </v-list-item-content>
+                  <v-list-item-content class="myMessage" style="width: 100%" v-else>
+                    <v-list-item-title style="color: #42b983" >
                       {{ $store.state.userData.userName }}</v-list-item-title>
-                    {{message['content']}}
-                    <picture-preview :img-url="message['imgUrl']"></picture-preview>
+                    <v-card color="#0e153a" class="pa-5 myMessageConten"  max-width="66%" >
+                      {{message['content']}}
+                      <picture-preview v-if="message['imgUrl']" :img-url="message['imgUrl']"></picture-preview>
+                    </v-card>
                   </v-list-item-content>
                 </v-list-item>
+
+
               </v-list-item-group>
             </v-list>
-            <v-divider></v-divider>
-            <add-new-message v-if="contactFocused"
-                 :contact-id="contactFocused['userId']" @send="pushBackMessage"></add-new-message>
+            <v-card v-if="contactSelected !== null && contactSelected !== undefined" style="margin-top: 10px;" color="#e4edff" class="pa-2">
+              <add-new-message v-if="contactFocused"
+                               :contact-id="contactFocused['userId']" @send="pushBackMessage"></add-new-message>
+            </v-card>
           </v-card>
         </v-col>
       </v-row>
@@ -230,6 +243,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="less">
+.myMessage{
+  .v-card{
+    color: white;
+  }
+}
 </style>

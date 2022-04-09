@@ -2,9 +2,11 @@
   <v-card>
     <v-form v-model="message.allow" ref="postForm">
       <v-textarea v-model="message.text"
+                  filled
                   :counter="textMax" :rules="textRule"
       ></v-textarea>
       <v-file-input v-model="message.file" accept="image/*"
+                    filled
                     prepend-icon="mdi-image" :rules="imgRule"
                     @change="changeImg"
       ></v-file-input>
