@@ -36,6 +36,7 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-pagination v-model="pageNum" :length="subData.pages" v-on:input="getSub"></v-pagination>
     </v-container>
   </v-main>
 
