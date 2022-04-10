@@ -4,7 +4,7 @@
     <v-container>
       <v-row  no-gutters>
         <v-col cols="3">
-          <v-card height="100%" class="pa-4" >
+          <v-card height="700" class="pa-4" outlined tile>
           <v-list style="background-color: #e4edff" three-line height="100%">
             <v-list-item-group v-model="contactSelected">
               <v-list-item v-for="(user, key) in contact" :key="key">
@@ -26,7 +26,7 @@
           </v-card>
         </v-col>
         <v-col cols="9">
-          <v-card height="100%" class="pa-4" >
+          <v-card id="msgCard" height="700" class="pa-4" style="overflow: auto" outlined tile>
             <v-list v-if="contactSelected !== null && contactSelected !== undefined" style="background-color: #e4edff">
               <v-list-item-group >
                 <v-list-item v-for="(message, key) in historyFocused" :key="key">
@@ -46,7 +46,7 @@
                   <v-list-item-content class="myMessage" style="width: 100%" v-else>
                     <v-list-item-title style="color: #42b983" >
                       {{ $store.state.userData.userName }}</v-list-item-title>
-                    <v-card color="#0e153a" class="pa-5 myMessageConten"  max-width="66%" >
+                    <v-card color="#0e153a" class="pa-5 myMessageContent"  max-width="66%" >
                       {{message['content']}}
                       <picture-preview v-if="message['imgUrl']" :img-url="message['imgUrl']"></picture-preview>
                     </v-card>
@@ -92,22 +92,51 @@ export default {
       else{
         this.socket.close()
         clearTimeout(this.reconnectTimer)
+        this.contact = []
+        this.history = new Map()
+        this.historyFocused = []
+        this.contactIdMap = new Map()
+        this.contactSelected = null
+        this.scrollTop = []
       }
     },
     newContact(val){
       if(val !== null){
         let data = this.$store.state.message.newContact
-        if(!this.contactIdSet.has(data["userId"])) {
+        if(!this.contactIdMap.has(data["userId"])) {
           this.addContact(data["userId"])
+          .then(()=>{
+            this.contactSelected = this.contactIdMap.get(data["userId"])
+          })
         }
         this.$store.commit("message/popNewContact")
       }
     },
-    contactSelected(val){
+    contactSelected(val, oldVal){
+      let msgCard = document.querySelector('#msgCard')
+      // console.log(val + " " + oldVal)
+      if(oldVal !== null && oldVal !== undefined){
+        if(this.contactIdMap.has(oldVal))
+          this.scrollTop[oldVal] = msgCard.scrollTop
+        // console.log(msgCard.scrollTop)
+      }
       if(val !== null && val !== undefined){
-        console.log(this.contact[val])
+        // console.log("??")
         this.historyFocused = this.history.get(this.contact[val]["userId"])
-        console.log(this.historyFocused)
+      }
+      else{
+        this.historyFocused = []
+      }
+    },
+    historyFocused(val){
+      let vm = this
+      // console.log(val)
+      if(val){
+        let msgCard = document.querySelector('#msgCard')
+        this.$nextTick(function (){
+          // console.log(vm.contactSelected in vm.scrollTop)
+          msgCard.scrollTop = vm.contactSelected in vm.scrollTop ? vm.scrollTop[vm.contactSelected] : msgCard.scrollHeight
+        })
       }
     }
   },
@@ -122,8 +151,9 @@ export default {
       contact: [],
       history: new Map(),
       historyFocused: [],
-      contactIdSet: new Set(),
+      contactIdMap: new Map(),
       contactSelected: null,
+      scrollTop: [],
     }
   },
   created(){
@@ -153,13 +183,15 @@ export default {
         console.log(msg)
         let type = msg["type"]
         msg = msg["data"]
-        let senderId = msg["senderId"]
-        console.log(senderId)
-        if(!vm.contactIdSet.has(senderId)){
-          vm.addContact(senderId)
-        }
-        else{
-          vm.history.get(senderId).push(msg)
+        if(type === "message"){
+          let senderId = msg["senderId"]
+          console.log(senderId)
+          if(!vm.contactIdMap.has(senderId)){
+            vm.addContact(senderId)
+          }
+          else{
+            vm.history.get(senderId).push(msg)
+          }
         }
       }
       this.socket.onclose = function (){
@@ -175,8 +207,7 @@ export default {
     },
     addContact(contactId){
       let vm = this
-      vm.contactIdSet.add(contactId)
-      axios.get("/api/user/get", {params:{"id": contactId}})
+      return axios.get("/api/user/get", {params:{"id": contactId}})
           .then(res=>{
             console.log("new contact: ");
             console.log(res)
@@ -184,6 +215,7 @@ export default {
               vm.contact.push(res["data"]["data"])
             }
           }).then(()=>{
+        vm.contactIdMap.set(contactId, vm.contact.length - 1)
         vm.getHistory(1, 15, contactId, vm.contact.length - 1, true)
       })
     },
@@ -194,11 +226,11 @@ export default {
         if(res["status"] === 200 && res["data"]["status"] === 200){
           vm.contact = res["data"]["data"]
           console.log(res["data"]["data"])
-          for(let unit in res["data"]["data"]){
+          for(let index in res["data"]["data"]){
             // console.log(unit)
-            let userId = res["data"]["data"][unit]["userId"]
-            vm.contactIdSet.add(userId)
-            vm.getHistory(1, 15, userId, unit, true)
+            let userId = res["data"]["data"][index]["userId"]
+            vm.contactIdMap.set(userId, index)
+            vm.getHistory(1, 15, userId, index, true)
           }
         }
       })
@@ -212,8 +244,8 @@ export default {
         if(res["status"] === 200 && res["data"]["status"] === 200){
           if(init === true){
             vm.history.set(contactId, res["data"]["data"]["list"].reverse())
-            console.log("history load: " + contactId)
-            console.log(vm.history.get(contactId))
+            // console.log("history load: " + contactId)
+            // console.log(vm.history.get(contactId))
             if(index === vm.contactSelected)
               vm.historyFocused = vm.history.get(contactId)
           }
@@ -226,14 +258,25 @@ export default {
         headers:{Authorization: this.$store.state.loginState.token},
         params: {contactId: contactId}
       }).then(res=>{
-        console.log(res)
+        // console.log(res)
+        // console.log(vm.scrollTop + " " + index)
         if(res["status"] === 200 && res["data"]["status"] === 200){
           let data = vm.contact[index]
           vm.contact.splice(index, 1)
+          // console.log("splice " + index)
+          vm.scrollTop.splice(index, 1)
           vm.history.delete(contactId)
-          vm.contactIdSet.delete(data["userId"])
+          vm.contactIdMap.delete(data["userId"])
           vm.contactSelected = null
+          vm.historyFocused = []
         }
+      }).then(()=>{
+        for(let i = index; i < vm.contact.length; i++){
+          vm.contactIdMap.set(vm.contact[i]["userId"], i)
+        }
+      }).then(()=>{
+        // console.log(vm.contactIdMap)
+        // console.log(vm.scrollTop)
       })
     },
     pushBackMessage(msg){
