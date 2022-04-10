@@ -27,6 +27,8 @@
         </v-col>
         <v-col cols="9">
           <v-card id="msgCard" height="700" class="pa-4" style="overflow: auto" outlined tile>
+            <v-btn @click="loadHistory" text v-if="contactSelected !== null && contactSelected !== undefined">
+              查看历史消息</v-btn>
             <v-list v-if="contactSelected !== null && contactSelected !== undefined" style="background-color: #e4edff">
               <v-list-item-group >
                 <v-list-item v-for="(message, key) in historyFocused" :key="key">
@@ -114,11 +116,12 @@ export default {
     },
     contactSelected(val, oldVal){
       let msgCard = document.querySelector('#msgCard')
-      // console.log(val + " " + oldVal)
+      console.log(val + " " + oldVal)
       if(oldVal !== null && oldVal !== undefined){
-        if(this.contactIdMap.has(oldVal))
+        if(val !== null){
           this.scrollTop[oldVal] = msgCard.scrollTop
-        // console.log(msgCard.scrollTop)
+          console.log(msgCard.scrollTop)
+        }
       }
       if(val !== null && val !== undefined){
         // console.log("??")
@@ -130,11 +133,11 @@ export default {
     },
     historyFocused(val){
       let vm = this
-      // console.log(val)
+      console.log("history focused update")
       if(val){
         let msgCard = document.querySelector('#msgCard')
         this.$nextTick(function (){
-          // console.log(vm.contactSelected in vm.scrollTop)
+          console.log(vm.contactSelected in vm.scrollTop)
           msgCard.scrollTop = vm.contactSelected in vm.scrollTop ? vm.scrollTop[vm.contactSelected] : msgCard.scrollHeight
         })
       }
@@ -154,6 +157,7 @@ export default {
       contactIdMap: new Map(),
       contactSelected: null,
       scrollTop: [],
+
     }
   },
   created(){
@@ -235,17 +239,32 @@ export default {
         }
       })
     },
-    getHistory(pageNum, pageSize, contactId, index, init){
+    loadHistory(){
+      this.scrollTop[this.contactSelected] = 0
+      this.getHistory(1, 15, this.contactFocused["userId"], this.contactSelected, false,
+        this.historyFocused[0]["sendTime"])
+    },
+    getHistory(pageNum, pageSize, contactId, index, init, before = null){
       let vm = this
+      if(before)
+        console.log(before)
       axios.get("/api/message/get", {
         headers:{Authorization: this.$store.state.loginState.token},
-        params:{contactId: contactId, pageNum: pageNum, pageSize: pageSize}
+        params:{contactId: contactId, pageNum: pageNum, pageSize: pageSize, before: before}
       }).then(res=>{
         if(res["status"] === 200 && res["data"]["status"] === 200){
           if(init === true){
             vm.history.set(contactId, res["data"]["data"]["list"].reverse())
             // console.log("history load: " + contactId)
             // console.log(vm.history.get(contactId))
+            if(index === vm.contactSelected)
+              vm.historyFocused = vm.history.get(contactId)
+          }
+          else{
+            let h = vm.history.get(contactId)
+            h = res["data"]["data"]["list"].reverse().concat(h)
+            console.log(h)
+            vm.history.set(contactId, h)
             if(index === vm.contactSelected)
               vm.historyFocused = vm.history.get(contactId)
           }
