@@ -7,9 +7,9 @@
               <template v-slot:activator="{ on}">
                 <v-list-item>
                   <v-list-item-content v-on="on">
-                    <v-list-item-avatar size="10%">
+                    <v-avatar size="120" max-width="120"  style="margin:0 auto">
                       <v-img :src="OssUrl+reply.sender.userAvatar"></v-img>
-                    </v-list-item-avatar>
+                    </v-avatar>
                     <v-list-item-title style="text-align: center;margin-top: 20px">{{ reply.sender.userName }}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>

@@ -7,15 +7,15 @@
       <v-toolbar-title>发送帖子</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-form v-model="post.allow" ref="postForm">
+    <v-form v-model="post.allow" ref="postForm" class="pa-4">
       <v-text-field filled v-model="post.title"
                     label="标题"
                     placeholder="输入你的标题"
                     :counter="titleMax" :rules="titleRule"
       ></v-text-field>
       <v-textarea filled v-model="post.text"
-                  label="回复"
-                  placeholder="输入你的回复"
+                  label="内容"
+                  placeholder="输入你的内容"
                     :counter="textMax" :rules="textRule"
       ></v-textarea>
       <v-file-input filled v-model="post.file" accept="image/*"

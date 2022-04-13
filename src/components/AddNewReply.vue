@@ -7,7 +7,7 @@
       <v-toolbar-title>添加回复</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-form v-model="reply.allow" ref="replyForm">
+    <v-form v-model="reply.allow" ref="replyForm" class="pa-4">
       <v-textarea
           filled
           name="input-7-4"
