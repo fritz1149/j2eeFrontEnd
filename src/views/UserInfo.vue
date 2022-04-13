@@ -3,7 +3,7 @@
     <v-alert type="error" v-model="alert" dismissible>更新失败，检查一下网络吧</v-alert>
     <v-main>
       <v-row>
-        <v-col cols="6" offset="3">
+        <v-col cols="8" offset="2">
           <v-card>
             <v-list>
               <v-list-item >
@@ -14,6 +14,30 @@
               </v-list-item>
             </v-list>
           </v-card>
+          <v-bottom-navigation
+              v-model="areaValue"
+              :background-color="color"
+              dark
+              shift
+          >
+            <v-btn>
+              <span>Video</span>
+              <v-icon>mdi-television-play</v-icon>
+            </v-btn>
+            <v-btn>
+              <span>Music</span>
+              <v-icon>mdi-music-note</v-icon>
+            </v-btn>
+            <v-btn>
+              <span>Book</span>
+
+              <v-icon>mdi-book</v-icon>
+            </v-btn>
+            <v-btn>
+              <span>Image</span>
+              <v-icon>mdi-image</v-icon>
+            </v-btn>
+          </v-bottom-navigation>
         </v-col>
       </v-row>
     </v-main>
@@ -43,7 +67,16 @@ export default {
     },
     imgUrl(){
       return this.hover ? require('../assets/updateAvatar.png') : this.OssUrl + this.user['userAvatar']
-    }
+    },
+    color () {
+      switch (this.areaValue) {
+        case 0: return 'blue-grey'
+        case 1: return 'teal'
+        case 2: return 'brown'
+        case 3: return 'indigo'
+        default: return 'blue-grey'
+      }
+    },
   },
   created() {
     console.log(this.user)
@@ -52,6 +85,7 @@ export default {
     return{
       hover: false,
       updateAvatar: false,
+      areaValue:1,
       imgRule: [
         v=>{ return (v !== null && v["type"].search("image") != -1) || "请上传图片" },
       ],
