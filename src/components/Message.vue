@@ -2,9 +2,9 @@
   <v-dialog  v-model="display" width="80%"
             @click:outside="$store.commit('message/hideMessage')">
     <v-container>
-      <v-row  no-gutters>
+      <v-row   no-gutters>
         <v-col cols="3">
-          <v-card height="700" class="pa-4" outlined tile>
+          <v-card height="700" class="pa-4" outlined>
           <v-list style="background-color: #e4edff" three-line height="100%">
             <v-list-item-group v-model="contactSelected">
               <v-list-item v-for="(user, key) in contact" :key="key">
@@ -26,7 +26,7 @@
           </v-card>
         </v-col>
         <v-col cols="9">
-          <v-card id="msgCard" height="700" class="pa-4" style="overflow: auto" outlined tile>
+          <v-card id="msgCard" height="700" class="pa-4" style="overflow: auto" outlined >
             <v-btn @click="loadHistory" text v-if="contactSelected !== null && contactSelected !== undefined">
               查看历史消息</v-btn>
             <v-list v-if="contactSelected !== null && contactSelected !== undefined" style="background-color: #e4edff">
