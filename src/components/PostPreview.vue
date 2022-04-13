@@ -14,8 +14,7 @@
             <p @click="toPost" class="postPreviewTitle">{{postTitle}}</p>
           </v-card-title>
           <v-card-text class="postPreviewContent" v-text="postContent"/>
-          <v-img v-if="postPicUrl!==undefined" :src="this.OssUrl+postPicUrl" max-height="300"
-          max-width="500"></v-img>
+          <PicturePreview v-if="postPicUrl!==undefined" :img-url="postPicUrl"></PicturePreview>
           <v-card-subtitle class="postPreviewTime" v-text="'最后回复于'+postLastRepliedTime"/>
         </v-col>
       </v-row>
@@ -24,6 +23,7 @@
 </template>
 
 <script>
+import PicturePreview from "@/components/PicturePreview";
 export default {
   name: "PostPreview",
   props:{
@@ -37,6 +37,9 @@ export default {
     postLastRepliedTime:String,
     postPicUrl:String,
     postRepliedCount:Number
+  },
+  components:{
+    PicturePreview
   },
   methods: {
     toPost() {

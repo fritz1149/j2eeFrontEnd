@@ -60,7 +60,9 @@
           </v-card>
           </v-expand-transition>
 
+          <v-expand-transition>
           <v-card v-show="areaValue==1">
+
             <v-toolbar
                 :color="color"
                 dark
@@ -69,17 +71,20 @@
             </v-toolbar>
             <MyPostPage></MyPostPage>
           </v-card>
+          </v-expand-transition>
 
-          <v-card v-show="areaValue==2">
-            <v-toolbar
-                :color="color"
-                dark
-                style="margin-bottom: 30px"
-            >
-              <v-toolbar-title>我的回帖</v-toolbar-title>
-            </v-toolbar>
-            <MyReplyPage></MyReplyPage>
-          </v-card>
+          <v-expand-transition>
+            <v-card v-show="areaValue==2">
+              <v-toolbar
+                  :color="color"
+                  dark
+                  style="margin-bottom: 30px"
+              >
+                <v-toolbar-title>我的回帖</v-toolbar-title>
+              </v-toolbar>
+              <MyReplyPage></MyReplyPage>
+            </v-card>
+          </v-expand-transition>
 
           <v-card v-show="areaValue==3">
             <v-toolbar
