@@ -24,7 +24,7 @@
                 shift
             >
               <v-btn>
-                <span>关注的吧</span>
+                <span>我的关注</span>
                 <v-icon>mdi-television-play</v-icon>
               </v-btn>
               <v-btn>
@@ -45,7 +45,56 @@
 
         </v-col>
       </v-row>
+
+      <v-row>
+        <v-col cols="8" offset="2">
+          <v-expand-transition>
+          <v-card v-show="areaValue==0">
+            <v-toolbar
+                :color="color"
+                dark
+            >
+              <v-toolbar-title>我的关注</v-toolbar-title>
+            </v-toolbar>
+            <SubScribePage></SubScribePage>
+          </v-card>
+          </v-expand-transition>
+
+          <v-card v-show="areaValue==1">
+            <v-toolbar
+                :color="color"
+                dark
+            >
+              <v-toolbar-title>我的发帖</v-toolbar-title>
+            </v-toolbar>
+            <MyPostPage></MyPostPage>
+          </v-card>
+
+          <v-card v-show="areaValue==2">
+            <v-toolbar
+                :color="color"
+                dark
+            >
+              <v-toolbar-title>我的回帖</v-toolbar-title>
+            </v-toolbar>
+          </v-card>
+
+          <v-card v-show="areaValue==3">
+            <v-toolbar
+                :color="color"
+                dark
+            >
+              <v-toolbar-title>回复我的</v-toolbar-title>
+            </v-toolbar>
+          </v-card>
+
+
+        </v-col>
+      </v-row>
     </v-main>
+
+
+
     <v-dialog max-width="60%" v-model="updateAvatar">
 
           <v-card>
@@ -100,14 +149,38 @@
             </v-btn>
           </v-form>
         </v-card>
+
+      <v-snackbar v-model="display" top>
+        {{notification}}
+        <template v-slot:action="{ attrs }">
+          <v-btn
+              color="pink"
+              text
+              v-bind="attrs"
+              @click="display=false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-dialog>
+
+
+
+
   </v-container>
 </template>
 
 <script>
 import axios from "axios";
+import SubScribePage from "@/views/SubScribePage";
+import MyPostPage from "@/views/MyPostPage";
 export default {
   name: "UserInfo",
+  components:{
+    SubScribePage,
+    MyPostPage,
+  },
   computed:{
     user(){
       return this.$store.state.userData
@@ -149,6 +222,8 @@ export default {
       alert: false,
       imgShow:null,
       editName:false,
+      display:false,
+      notification:"",
     }
   },
   methods:{
@@ -195,12 +270,19 @@ export default {
         let formData = new FormData()
         formData.append("name", this.newName)
         let res=await axios.post("/api/user/name",formData,{headers:{Authorization:this.$store.state.loginState.token}})
-        let newInfo = Object.create(this.$store.state.userData)
-        newInfo.userName = res["data"]["newname"]
-        this.$store.commit("userData/saveUserData", newInfo)
-        this.$router.push("/refresh")
+        if(res.data.status==200){
+          let newInfo = Object.create(this.$store.state.userData)
+          newInfo.userName = res["data"]["newname"]
+          this.$store.commit("userData/saveUserData", newInfo)
+          this.$router.push("/refresh")
+        }else{
+          this.notification=res.data.cause
+          this.display=true
+        }
       }
     }
+
+
   }
 }
 </script>
