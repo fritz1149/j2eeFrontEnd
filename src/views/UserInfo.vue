@@ -10,8 +10,11 @@
                 <v-list-item-avatar id="avatar" size="100">
                   <v-img :src="imgUrl" @mouseenter="startHover" @mouseleave="endHover" @click="updateAvatar = true"></v-img>
                 </v-list-item-avatar>
-                <v-list-item-title style="font-weight: bold;font-size: 20px" v-text="user['userName']"></v-list-item-title>
-<!--                <v-btn @click="updateName">changeName</v-btn>-->
+                <span style="font-weight: bold;font-size: 20px" v-text="user['userName']">
+                </span>
+                <v-btn plain color="primary" @click="editName=true"><v-icon>mdi-credit-card-edit</v-icon></v-btn>
+
+                <!--                <v-btn @click="updateName">changeName</v-btn>-->
               </v-list-item>
             </v-list>
             <v-bottom-navigation
@@ -44,8 +47,16 @@
       </v-row>
     </v-main>
     <v-dialog max-width="60%" v-model="updateAvatar">
-          <v-card class="pa-4">
-            <v-form v-model="upload.allow" ref="avatarForm">
+
+          <v-card>
+            <v-toolbar
+                color="indigo"
+                dark
+            >
+              <v-toolbar-title>更换头像</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+            <v-form class="pa-4" v-model="upload.allow" ref="avatarForm">
               <v-file-input filled v-model="upload.file" accept="image/*"
                             prepend-icon="mdi-image" :rules="imgRule" placeholder="上传你的新头像"
                             @change="changeImg"
@@ -68,12 +79,33 @@
           </v-card>
 
     </v-dialog>
+
+    <v-dialog max-width="60%" v-model="editName">
+        <v-card>
+          <v-toolbar
+              color="warning"
+              dark
+          >
+            <v-toolbar-title>更换用户名 <span style="font-weight: bold">(请记住你的用户名，这将用于登录)</span> </v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-form class="pa-4" ref="nameForm">
+            <v-text-field filled v-model="newName"
+                          label="名字"
+                          :placeholder="user['username']" :rules="nameRule"
+            ></v-text-field>
+            <v-btn @click="updateName" color="success" block>
+              <v-icon>mdi-comment-check</v-icon>
+              提交
+            </v-btn>
+          </v-form>
+        </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 import axios from "axios";
-
 export default {
   name: "UserInfo",
   computed:{
@@ -104,13 +136,19 @@ export default {
       imgRule: [
         v=>{ return (v !== null && v["type"].search("image") != -1) || "请上传图片" },
       ],
+      nameMax:100,
+      nameRule:[
+        v=>{ return v.length <= this.nameMax || "字数太多啦" },
+        v=>{ return v.length > 0 || '不能什么都不写哦'}
+      ],
       upload:{
         allow: true,
         file: null,
       },
-      newName:"testczc2000",
+      newName:"",
       alert: false,
       imgShow:null,
+      editName:false,
     }
   },
   methods:{
@@ -152,12 +190,17 @@ export default {
         that.imgShow = this.result
       }
     },
-    // async updateName(){
-    //   let formData = new FormData()
-    //   formData.append("name", this.newName)
-    //   let res=await axios.post("/api/user/name",formData,{headers:{Authorization:this.$store.state.loginState.token}})
-    //   console.log(res)
-    // }
+    async updateName(){
+      if(this.$refs["nameForm"].validate()){
+        let formData = new FormData()
+        formData.append("name", this.newName)
+        let res=await axios.post("/api/user/name",formData,{headers:{Authorization:this.$store.state.loginState.token}})
+        let newInfo = Object.create(this.$store.state.userData)
+        newInfo.userName = res["data"]["newname"]
+        this.$store.commit("userData/saveUserData", newInfo)
+        this.$router.push("/refresh")
+      }
+    }
   }
 }
 </script>
