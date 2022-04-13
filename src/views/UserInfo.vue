@@ -74,9 +74,11 @@
             <v-toolbar
                 :color="color"
                 dark
+                style="margin-bottom: 30px"
             >
               <v-toolbar-title>我的回帖</v-toolbar-title>
             </v-toolbar>
+            <MyReplyPage></MyReplyPage>
           </v-card>
 
           <v-card v-show="areaValue==3">
@@ -175,11 +177,13 @@
 import axios from "axios";
 import SubScribePage from "@/views/SubScribePage";
 import MyPostPage from "@/views/MyPostPage";
+import MyReplyPage from "@/views/MyReplyPage";
 export default {
   name: "UserInfo",
   components:{
     SubScribePage,
     MyPostPage,
+    MyReplyPage
   },
   computed:{
     user(){

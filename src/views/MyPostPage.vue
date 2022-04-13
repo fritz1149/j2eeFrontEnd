@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="this.postData">
     <v-row style="margin-top: 30px">
       <v-col cols="10" offset="1">
         <post-preview v-for="(p,i) in this.postData.list" :key="i" :show-section="true" :post-section="p.section"
@@ -41,6 +41,7 @@ export default {
           pageSize:this.pageSize,
         }
       })
+      console.log(res)
       this.postData=res.data.data
     },
     nextPage:function (){

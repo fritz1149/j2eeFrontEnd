@@ -1,6 +1,6 @@
 <template>
 <div>
-  <v-main>
+  <v-main v-if="subData">
     <v-container>
       <v-row v-for="n in 3" :key="n">
         <v-col cols="4" v-for="j in 3" :key="3*(n-1)+j-1">
