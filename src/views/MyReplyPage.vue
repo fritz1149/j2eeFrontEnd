@@ -4,7 +4,7 @@
       <v-col cols="10" offset="1" >
         <ReplySimple v-for="(p,i) in this.replyData.list" :key="i"
                       :reply-content="p.content" :reply-pic-url="p.imgUrl" :reply-send-date="p.sendTime"
-                      :reply-sender="p.sender" :reply-id="p.replyId"/>
+                      :reply-sender="p.sender" :reply-id="p.replyId" :post-id="p.postId"/>
       </v-col>
     </v-row>
     <v-pagination v-model="pageNum" :length="replyData.pages" v-on:input="getMyReply" v-on:next="nextPage" v-on:previous="prevPage">
