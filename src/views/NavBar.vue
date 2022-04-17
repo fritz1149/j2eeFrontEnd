@@ -8,6 +8,7 @@
     <v-btn text value="message" v-if="isLogin" @click="$store.commit('message/showMessage')">
       <v-icon>mdi-message</v-icon>
       <span>Message</span>
+      <v-badge color="red" :content="unread" v-if="unread"></v-badge>
     </v-btn>
     <v-btn text value="login" to="/login" v-if="!isLogin">
       <v-icon>mdi-login</v-icon>
@@ -46,6 +47,9 @@ export default {
     },
     avatar(){
       return this.$store.state.userData.userAvatar;
+    },
+    unread(){
+      return this.$store.state.message.unread;
     }
   },
   created() {

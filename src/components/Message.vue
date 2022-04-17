@@ -12,7 +12,11 @@
                   <v-img :src="OssUrl+user['userAvatar']"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title>{{ user['userName'] }}</v-list-item-title>
+                  <v-list-item-title>
+                    {{ user['userName'] }}
+                    <v-badge v-if="key in unread && unread[key]" :content="unread[key]"
+                      color="red"></v-badge>
+                  </v-list-item-title>
                   <v-spacer></v-spacer>
                   <v-list-item-icon>
                     <v-btn icon>
@@ -125,7 +129,22 @@ export default {
       }
       if(val !== null && val !== undefined){
         // console.log("??")
-        this.historyFocused = this.history.get(this.contact[val]["userId"])
+        let contactId = this.contact[val]["userId"], vm = this
+        this.historyFocused = this.history.get(contactId)
+        if(this.unread[val]){
+          axios.post("/api/message/readAll", null, {
+            params:{contactId: contactId},
+            headers:{Authorization: this.$store.state.loginState.token}
+          }).then(res=>{
+            if(res["status"] === 200 && res["data"]["status"] === 200){
+              vm.$store.commit("message/updateUnread", -this.unread[val])
+              vm.$set(vm.unread, val, 0)
+            }
+            else{
+              console.log("阅读信息失败")
+            }
+          })
+        }
       }
       else{
         this.historyFocused = []
@@ -157,7 +176,7 @@ export default {
       contactIdMap: new Map(),
       contactSelected: null,
       scrollTop: [],
-
+      unread: [],
     }
   },
   created(){
@@ -176,6 +195,7 @@ export default {
       this.socket.onopen = function (){
         console.log("socket connected")
         vm.connected = true
+        vm.$store.commit("message/resetUnread")
         vm.getContact()
       }
       this.socket.onerror = function (){
@@ -194,6 +214,11 @@ export default {
             vm.addContact(senderId)
           }
           else{
+            let index = vm.contactIdMap.get(senderId)
+            if(index != vm.contactSelected)
+              vm.recordUnread(index, 1)
+            else
+              vm.historyFocused.push(msg)
             vm.history.get(senderId).push(msg)
           }
         }
@@ -253,8 +278,10 @@ export default {
         params:{contactId: contactId, pageNum: pageNum, pageSize: pageSize, before: before}
       }).then(res=>{
         if(res["status"] === 200 && res["data"]["status"] === 200){
+          let list = res["data"]["data"]["list"].reverse()
           if(init === true){
-            vm.history.set(contactId, res["data"]["data"]["list"].reverse())
+            vm.recordUnread(index, res["data"]["unread"], true)
+            vm.history.set(contactId, list)
             // console.log("history load: " + contactId)
             // console.log(vm.history.get(contactId))
             if(index === vm.contactSelected)
@@ -262,14 +289,20 @@ export default {
           }
           else{
             let h = vm.history.get(contactId)
-            h = res["data"]["data"]["list"].reverse().concat(h)
-            console.log(h)
+            h = list.concat(h)
+            // console.log(h)
             vm.history.set(contactId, h)
             if(index === vm.contactSelected)
               vm.historyFocused = vm.history.get(contactId)
           }
         }
       })
+    },
+    recordUnread(index, unread_local, init = false){
+      this.$store.commit("message/updateUnread", unread_local)
+      if(init === true)
+        this.unread[index] = 0
+      this.$set(this.unread, index, this.unread[index] + unread_local)
     },
     removeContact(contactId, index){
       let vm = this
@@ -284,6 +317,7 @@ export default {
           vm.contact.splice(index, 1)
           // console.log("splice " + index)
           vm.scrollTop.splice(index, 1)
+          vm.$store.commit("message/updateUnread", -vm.unread[index])
           vm.history.delete(contactId)
           vm.contactIdMap.delete(data["userId"])
           vm.contactSelected = null
@@ -293,6 +327,7 @@ export default {
         for(let i = index; i < vm.contact.length; i++){
           vm.contactIdMap.set(vm.contact[i]["userId"], i)
         }
+        vm.unread.splice(index, 1)
       }).then(()=>{
         // console.log(vm.contactIdMap)
         // console.log(vm.scrollTop)

@@ -78,6 +78,7 @@ const message = {
   state:{
     newContact: null,
     showMessage: false,
+    unread: 0,
   },
   mutations:{
     addNewContact(state, data){
@@ -91,6 +92,12 @@ const message = {
     },
     hideMessage(state){
       state.showMessage = false
+    },
+    updateUnread(state, delta){
+      state.unread += delta
+    },
+    resetUnread(state){
+      state.unread = 0
     }
   }
 }
