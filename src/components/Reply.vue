@@ -46,6 +46,14 @@
               </v-list-item>
               <v-list-item>
                 <v-spacer></v-spacer>
+                <v-btn v-if="isReply && reply.innerReplyCount!==0" @click="showInnerReply=!showInnerReply">
+                  <v-card-text v-if="showInnerReply===false">
+                    共有{{reply.innerReplyCount}}条回复
+                  </v-card-text>
+                  <v-card-text v-else>
+                    收起
+                  </v-card-text>
+                </v-btn>
                 <v-btn text plain right v-if="myReply" @click="deleteReply"><v-icon>mdi-delete</v-icon> 删除</v-btn>
                 <v-btn v-if="isReply" text plain @click="showInnerReply=!showInnerReply"><v-icon>mdi-message</v-icon>回复</v-btn>
                 <v-card-subtitle class="Subtitle">
@@ -55,10 +63,16 @@
             </v-list>
           </v-card>
           <v-expand-transition>
+            <v-card>
+              <InnerReplyWithPagination v-if="showInnerReply && reply.innerReplyCount!==0" :reply-id="reply.replyId" />
+            </v-card>
+          </v-expand-transition>
+          <v-expand-transition>
           <v-card v-if="showInnerReply">
             <AddInnerReply :reply="reply" :reply-to="replyTo"></AddInnerReply>
           </v-card>
           </v-expand-transition>
+
         </v-col>
       </v-row>
     </v-card>
@@ -68,10 +82,11 @@
 import axios from "axios";
 import PicturePreview from "@/components/PicturePreview";
 import AddInnerReply from "@/components/AddInnerReply";
+import InnerReplyWithPagination from "@/components/InnerReplyWithPagination";
 
 export default {
   name: "Reply",
-  components: {PicturePreview,AddInnerReply},
+  components: {InnerReplyWithPagination, PicturePreview,AddInnerReply},
   props: {
     reply: Object,
     isReply: Boolean,
@@ -80,6 +95,7 @@ export default {
     return {
       replyTo: null,
       showInnerReply:false,
+      innerReplyData:null
     }
   },
   computed: {
