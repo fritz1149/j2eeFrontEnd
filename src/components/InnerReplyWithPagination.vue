@@ -1,29 +1,23 @@
 <template>
 <v-card>
-  <v-card-text>hello？</v-card-text>
   <v-list three-line>
-    <template v-for="(r, index) in innerReplyData.list">
-      <v-subheader
-          v-if="item.header"
-          :key="index"
-          v-text="item.header"
-      ></v-subheader>
+    <template v-for="(r, index) in innerReplyData.data.list">
       <v-list-item
-          v-else
           :key="index"
       >
         <v-list-item-avatar>
-          <v-img :src="r.sender.userAvatar"></v-img>
+          <v-img :src="OssUrl+r.sender.userAvatar"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-content>
           <v-list-item-title v-html="r.sender.userName"></v-list-item-title>
           <v-list-item-subtitle v-html="r.content"></v-list-item-subtitle>
+          <v-list-item-content right v-html="r.sendTime"></v-list-item-content>
         </v-list-item-content>
       </v-list-item>
     </template>
   </v-list>
-  <v-pagination v-model="pageNum" :length="innerReplyData.pages"></v-pagination>
+  <v-pagination v-if="innerReplyData.data.pages!==1" v-model="pageNum" :length="innerReplyData.data.pages"></v-pagination>
 </v-card>
 </template>
 
@@ -46,7 +40,8 @@ export default {
       axios.get('/api/inner/get',{
         params:{
           pageNum:this.pageNum,
-          pageSize:this.pageSize
+          pageSize:this.pageSize,
+          replyID:this.replyId
         }
       }).then((res)=>{
         this.innerReplyData=res.data
