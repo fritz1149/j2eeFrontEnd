@@ -45,7 +45,8 @@
                     <v-list-item-title style="color: #3c97bf" v-if="message['senderId'] !== $store.state.userData.userId">
                       {{contactFocused['userName'] }}</v-list-item-title>
                     <v-card color="white" class="pa-5" max-width="66%" >
-                      {{message['content']}}
+                      <span v-html="message['content']" v-if="message['senderId'] === 5"></span>
+                      <span v-else>{{message['content']}}</span>
                       <picture-preview v-if="message['imgUrl']" :img-url="message['imgUrl']"></picture-preview>
                     </v-card>
                   </v-list-item-content>
@@ -132,18 +133,7 @@ export default {
         let contactId = this.contact[val]["userId"], vm = this
         this.historyFocused = this.history.get(contactId)
         if(this.unread[val]){
-          axios.post("/api/message/readAll", null, {
-            params:{contactId: contactId},
-            headers:{Authorization: this.$store.state.loginState.token}
-          }).then(res=>{
-            if(res["status"] === 200 && res["data"]["status"] === 200){
-              vm.$store.commit("message/updateUnread", -this.unread[val])
-              vm.$set(vm.unread, val, 0)
-            }
-            else{
-              console.log("阅读信息失败")
-            }
-          })
+          vm.readAll(contactId, val)
         }
       }
       else{
@@ -177,6 +167,7 @@ export default {
       contactSelected: null,
       scrollTop: [],
       unread: [],
+      testStr: "您在<a href='/section/5'>test</a>中发表的帖子：\\n<router-link to='/post/20156'>亚托克斯</router-link>被fritz1149回复了: 测试",
     }
   },
   created(){
@@ -205,22 +196,23 @@ export default {
         console.log("socket message:")
         msg = JSON.parse(msg["data"])
         console.log(msg)
-        let type = msg["type"]
+
         msg = msg["data"]
-        if(type === "message"){
-          let senderId = msg["senderId"]
-          console.log(senderId)
-          if(!vm.contactIdMap.has(senderId)){
-            vm.addContact(senderId)
+        let senderId = msg["senderId"]
+        console.log(senderId)
+        if(!vm.contactIdMap.has(senderId)){
+          vm.addContact(senderId)
+        }
+        else{
+          let index = vm.contactIdMap.get(senderId)
+          console.log("index: " + index + " selected: " + vm.contactSelected)
+          if(index != vm.contactSelected)
+            vm.recordUnread(index, 1)
+          else {
+            vm.historyFocused.push(msg)
+            vm.readAll(senderId, index)
           }
-          else{
-            let index = vm.contactIdMap.get(senderId)
-            if(index != vm.contactSelected)
-              vm.recordUnread(index, 1)
-            else
-              vm.historyFocused.push(msg)
-            vm.history.get(senderId).push(msg)
-          }
+          vm.history.get(senderId).push(msg)
         }
       }
       this.socket.onclose = function (){
@@ -335,6 +327,21 @@ export default {
     },
     pushBackMessage(msg){
       this.historyFocused.push(msg)
+    },
+    readAll(contactId, index){
+      let vm = this
+      axios.post("/api/message/readAll", null, {
+        params:{contactId: contactId},
+        headers:{Authorization: this.$store.state.loginState.token}
+      }).then(res=>{
+        if(res["status"] === 200 && res["data"]["status"] === 200){
+          vm.$store.commit("message/updateUnread", -this.unread[index])
+          vm.$set(vm.unread, index, 0)
+        }
+        else{
+          console.log("阅读信息失败")
+        }
+      })
     }
   },
 }

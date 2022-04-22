@@ -64,7 +64,7 @@ export default {
       console.log("logout")
       this.$store.dispatch('loginState/logOut')
       .then(()=>{
-        if(vm.$route.path == '/userInfo')
+        if(vm.$route.path === '/userInfo')
           vm.$router.push("/home")
         else
           vm.$router.push("/refresh")
