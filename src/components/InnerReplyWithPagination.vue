@@ -11,8 +11,8 @@
 
         <v-list-item-content>
           <v-list-item-title v-html="r.sender.userName"></v-list-item-title>
-          <v-list-item-subtitle v-html="r.content"></v-list-item-subtitle>
-          <v-list-item-content right v-html="r.sendTime"></v-list-item-content>
+          <v-list-item-content v-html="r.content"></v-list-item-content>
+          <v-list-item-subtitle right v-html="r.sendTime"></v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </template>

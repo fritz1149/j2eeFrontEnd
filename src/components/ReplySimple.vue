@@ -1,7 +1,14 @@
 <template>
   <v-card style="margin-bottom: 30px">
     <v-row>
-      <v-col cols="10" offset="1">
+      <v-col cols="2">
+        <div class="PostPreviewAvatar">
+          <v-avatar style="margin-bottom: 20px" size="80" rounded="rounded-circle" ><v-img :src="this.OssUrl+replySender.userAvatar"></v-img>
+          </v-avatar>
+          {{ replySender.userName }}
+        </div>
+      </v-col>
+      <v-col cols="10">
         <v-card-title >
           <p @click="toPost" class="postPreviewTitle">查看原帖</p>
         </v-card-title>
@@ -25,7 +32,7 @@ export default {
     replySendDate:String,
     replySender:Object,
     replyPicUrl:String,
-    postId:Number
+    postId:Number,
   },
   name: "ReplySimple",
   methods:{
@@ -79,5 +86,11 @@ export default {
       0 10.5px 37.1px -1px rgba(0, 0, 0, 0.055),
       0 16.9px 49.1px -1px rgba(0, 0, 0, 0.069),
       0 31px 80px -1px rgba(0, 0, 0, 0.14);
+}
+.PostPreviewAvatar{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

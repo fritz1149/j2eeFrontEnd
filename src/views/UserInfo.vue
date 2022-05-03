@@ -25,20 +25,19 @@
             >
               <v-btn>
                 <span>我的关注</span>
-                <v-icon>mdi-television-play</v-icon>
+                <v-icon>mdi-heart</v-icon>
               </v-btn>
               <v-btn>
                 <span>我的发帖</span>
-                <v-icon>mdi-music-note</v-icon>
+                <v-icon>mdi-post</v-icon>
               </v-btn>
               <v-btn>
                 <span>我的回帖</span>
-
-                <v-icon>mdi-book</v-icon>
+                <v-icon>mdi-chat-processing</v-icon>
               </v-btn>
               <v-btn>
                 <span>回复我的</span>
-                <v-icon>mdi-image</v-icon>
+                <v-icon>mdi-reply</v-icon>
               </v-btn>
             </v-bottom-navigation>
           </v-card>
@@ -86,14 +85,18 @@
             </v-card>
           </v-expand-transition>
 
+          <v-expand-transition>
           <v-card v-show="areaValue==3">
             <v-toolbar
                 :color="color"
                 dark
+                style="margin-bottom: 30px"
             >
               <v-toolbar-title>回复我的</v-toolbar-title>
             </v-toolbar>
+            <ReplyToMePage></ReplyToMePage>
           </v-card>
+          </v-expand-transition>
 
 
         </v-col>
@@ -183,12 +186,14 @@ import axios from "axios";
 import SubScribePage from "@/views/SubScribePage";
 import MyPostPage from "@/views/MyPostPage";
 import MyReplyPage from "@/views/MyReplyPage";
+import ReplyToMePage from "@/views/ReplyToMePage";
 export default {
   name: "UserInfo",
   components:{
     SubScribePage,
     MyPostPage,
-    MyReplyPage
+    MyReplyPage,
+    ReplyToMePage
   },
   computed:{
     user(){
@@ -199,10 +204,10 @@ export default {
     },
     color () {
       switch (this.areaValue) {
-        case 0: return 'blue-grey'
+        case 0: return 'indigo'
         case 1: return 'teal'
-        case 2: return 'brown'
-        case 3: return 'indigo'
+        case 2: return 'cyan darken-2'
+        case 3: return 'purple darken-2'
         default: return 'blue-grey'
       }
     },

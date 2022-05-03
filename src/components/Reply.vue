@@ -46,16 +46,19 @@
               </v-list-item>
               <v-list-item>
                 <v-spacer></v-spacer>
-                <v-btn v-if="isReply && reply.innerReplyCount!==0" @click="showInnerReply=!showInnerReply">
-                  <v-card-text v-if="showInnerReply===false">
-                    共有{{reply.innerReplyCount}}条回复
-                  </v-card-text>
-                  <v-card-text v-else>
-                    收起
-                  </v-card-text>
-                </v-btn>
+
                 <v-btn text plain right v-if="myReply" @click="deleteReply"><v-icon>mdi-delete</v-icon> 删除</v-btn>
-                <v-btn v-if="isReply" text plain @click="showInnerReply=!showInnerReply"><v-icon>mdi-message</v-icon>回复</v-btn>
+                <v-btn text plain v-if="isReply " @click="showInnerReply=!showInnerReply">
+                  <template v-if="!showInnerReply&&reply.innerReplyCount===0">
+                    <v-icon>mdi-message</v-icon>回复
+                  </template>
+                  <template v-else-if="!showInnerReply&&reply.innerReplyCount!==0">
+                    <v-icon>mdi-message</v-icon>共有{{reply.innerReplyCount}}条回复<v-icon>mdi-menu-down</v-icon>
+                  </template>
+                  <template v-else>
+                    收起<v-icon>mdi-menu-up</v-icon>
+                  </template>
+                </v-btn>
                 <v-card-subtitle class="Subtitle">
                   {{ reply.sendTime }}
                 </v-card-subtitle>
