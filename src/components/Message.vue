@@ -31,9 +31,9 @@
         </v-col>
         <v-col cols="9">
           <v-card id="msgCard" height="700" class="pa-4" style="overflow: auto" outlined >
-            <v-btn @click="loadHistory" text v-if="contactSelected !== null && contactSelected !== undefined">
-              查看历史消息</v-btn>
             <v-list v-if="contactSelected !== null && contactSelected !== undefined" style="background-color: #e4edff">
+              <v-btn @click="loadHistory" text  block large v-if="contactSelected !== null && contactSelected !== undefined">
+                查看历史消息</v-btn>
               <v-list-item-group >
                 <v-list-item v-for="(message, key) in historyFocused" :key="key">
                   <v-list-item-avatar size="50px">
