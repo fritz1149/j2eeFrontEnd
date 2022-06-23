@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div></div>
+    <div class="SectionBackground"></div>
     <v-main>
       <v-container>
         <v-alert type="error" v-model="alert" dismissible>发帖失败，检查一下网络吧</v-alert>
@@ -26,8 +26,9 @@
               <template v-slot:activator="{on}">
                 <v-btn
                     v-if="$store.state.loginState.isLogin"
-                    color="blue lighten-2"
+                    color="blue darken-2"
                     dark
+                    large
                     v-on="on"
                 >
                   <v-icon>mdi-pencil-plus</v-icon>
@@ -37,6 +38,7 @@
                     v-else
                     color="blue-grey darken-2"
                     dark
+                    large
                     @click="noticeLogin"
                 >
                   <v-icon>mdi-pencil-plus</v-icon>
@@ -172,5 +174,14 @@ export default {
 }
 </script>
 <style lang="less">
-
+.SectionBackground{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../assets/section_bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
 </style>

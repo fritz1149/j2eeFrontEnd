@@ -103,7 +103,7 @@
         <div class="overlay">
           <div class="overlay-panel overlay-left">
             <h1 style="color: white">欢迎回来</h1>
-            <p style="color: white;font-weight: bold">欢迎回到xxx论坛，登录以进行发帖和回复</p>
+            <p style="color: white;font-weight: bold">欢迎回到BH贴吧，登录以进行发帖和回复</p>
             <button class="ghost realButton" id="signIn" @click="right_active=false">登录</button>
           </div>
           <div class="overlay-panel overlay-right">
@@ -230,14 +230,16 @@ export default{
 <style lang="less">
 #loginform1 {
   width: 100%;
-  background-color: black;
+  background-image: url("../assets/login_bg.jpg");
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   font-family: 'Montserrat', sans-serif;
-  height: calc(100vh);
-  margin: -20px 0 50px;
+  height: 100vh;
+  overflow: hidden;
   h1 {
     font-weight: bold;
     margin: 0;
