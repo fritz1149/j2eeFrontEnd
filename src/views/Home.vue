@@ -75,6 +75,7 @@
         </v-row>
       </v-container>
     </v-main>
+    <login-notification :display.sync="snackbar" :notification="notification"></login-notification>
   </div>
 </template>
 
@@ -83,6 +84,7 @@
 import axios from "axios";
 import PostPreview from "@/components/PostPreview";
 import AddNewSection from "@/components/AddNewSection";
+import LoginNotification from "@/components/LoginNotification";
 
 export default {
   name: 'Home',
@@ -97,10 +99,13 @@ export default {
         currentPage:1,
         pageSize:10
       },
-      self:this
+      self:this,
+      snackbar: false,
+      notification: '',
     }
   },
   components: {
+    LoginNotification,
     AddNewSection,
     PostPreview
   },beforeMount() {
@@ -153,7 +158,11 @@ export default {
     },
     toTop(){
       this.$vuetify.goTo(0,"easeInOutCubic")
-    }
+    },
+    noticeLogin(){
+      this.snackbar = true
+      this.notification = '请登陆后再关注~'
+    },
   },
 
   computed:{
