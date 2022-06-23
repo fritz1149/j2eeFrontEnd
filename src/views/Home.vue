@@ -46,6 +46,32 @@
 
             </v-pagination>
           </v-col>
+
+          <v-col cols="2">
+            <v-dialog width="50%">
+              <template v-slot:activator="{on}">
+                <v-btn
+                    v-if="$store.state.loginState.isLogin"
+                    color="blue lighten-2"
+                    dark
+                    v-on="on"
+                >
+                  <v-icon>mdi-pencil-plus</v-icon>
+                  &nbsp;新建贴吧
+                </v-btn>
+                <v-btn
+                    v-else
+                    color="blue-grey darken-2"
+                    dark
+                    @click="noticeLogin"
+                >
+                  <v-icon>mdi-pencil-plus</v-icon>
+                  &nbsp;新建贴吧
+                </v-btn>
+              </template>
+              <AddNewSection></AddNewSection>
+            </v-dialog>
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -56,6 +82,7 @@
 
 import axios from "axios";
 import PostPreview from "@/components/PostPreview";
+import AddNewSection from "@/components/AddNewSection";
 
 export default {
   name: 'Home',
@@ -74,6 +101,7 @@ export default {
     }
   },
   components: {
+    AddNewSection,
     PostPreview
   },beforeMount() {
   },
